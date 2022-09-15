@@ -1,2 +1,3 @@
 
 import clear_data.series_extensions
+from clear_data.finite_function import FiniteFunction
