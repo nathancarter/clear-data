@@ -6,7 +6,8 @@
         {
             "label": "Run unit tests",
             "type": "shell",
-            "command": "python3 -m unittest -v tests/*"
+            "command": "python3 -m unittest -v tests/*",
+            "problemMatcher": []
         }
     ]
 }
