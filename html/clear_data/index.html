@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
 <title>clear_data API documentation</title>
-<meta name="description" content="" />
+<meta name="description" content="Working with data in pandas should not require arcane knowledge …" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -22,11 +22,33 @@
 <h1 class="title">Package <code>clear_data</code></h1>
 </header>
 <section id="section-intro">
+<p>Working with data in pandas should not require arcane knowledge.</p>
+<ul>
+<li>You should not have to know the secret of
+<code>dict( zip( df.date, df.temperature ) )</code></li>
+<li>Instead, you should be able to write
+<code>df.date.get_function_to( df.temperature )</code></li>
+</ul>
+<p>More examples will be put here.
+There is no release yet; this is a brand new,
+experimental project.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">import clear_data.series_extensions
+<pre><code class="python">&#34;&#34;&#34;
+Working with data in pandas should not require arcane knowledge.
+
+ * You should not have to know the secret of
+   `dict( zip( df.date, df.temperature ) )`
+ * Instead, you should be able to write
+   `df.date.get_function_to( df.temperature )`
+
+More examples will be put here.  There is no release yet; this is a brand new,
+experimental project.
+&#34;&#34;&#34;
+
+import clear_data.series_extensions
 from clear_data.finite_function import FiniteFunction</code></pre>
 </details>
 </section>

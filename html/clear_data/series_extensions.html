@@ -106,11 +106,12 @@ def series_to_function ( self ):
         making it easy to apply the function to do lookups.
 
         This function is added to the `Series` class, so you can call it as
-        `mySeries.to_function()`.
+        `mySeries.to_function()` or `mySeries.get_function()`.
         &#34;&#34;&#34;
         return FiniteFunction( self.index.to_series(), self )
 
 pd.Series.to_function = series_to_function
+pd.Series.get_function = series_to_function
 
 def series_to_function_to ( self, other_series ):
         &#34;&#34;&#34;
@@ -121,11 +122,13 @@ def series_to_function_to ( self, other_series ):
         lookups.
 
         This function is added to the `Series` class, so you can call it as
-        `mySeries.to_function_to(yourSeries)`.
+        `mySeries.to_function_to(yourSeries)` or
+        `mySeries.get_function_to(yourSeries)`.
         &#34;&#34;&#34;
         return FiniteFunction( self, other_series )
 
 pd.Series.to_function_to = series_to_function_to
+pd.Series.get_function_to = series_to_function_to
 
 def series_to_dictionary ( self ):
         &#34;&#34;&#34;
@@ -135,12 +138,15 @@ def series_to_dictionary ( self ):
         to perform lookup operations.
 
         This function is added to the `Series` class, so you can call it as
-        `mySeries.to_dictionary()` or just as `mySeries.to_dict()`.
+        `mySeries.to_dictionary()` or just as `mySeries.to_dict()`.  You can also
+        write `mySeries.get_dictionary()` or `mySeries.get_dict()`.
         &#34;&#34;&#34;
         return dict( zip( self.index.to_series(), self ) )
 
 pd.Series.to_dict = series_to_dictionary
 pd.Series.to_dictionary = series_to_dictionary
+pd.Series.get_dict = series_to_dictionary
+pd.Series.get_dictionary = series_to_dictionary
 
 def series_to_dictionary_to ( self, other_series ):
         &#34;&#34;&#34;
@@ -151,12 +157,16 @@ def series_to_dictionary_to ( self, other_series ):
 
         This function is added to the `Series` class, so you can call it as
         `mySeries.to_dictionary_to(yourSeries)` or just as
-        `mySeries.to_dict_to(yourSeries)`.
+        `mySeries.to_dict_to(yourSeries)`.  Because &#34;to_dictionary_to&#34; is awkward,
+        you can also use `mySeries.get_dictionary_to(yourSeries)` or
+        `mySeries.get_dict_to(yourSeries)`.
         &#34;&#34;&#34;
         return dict( zip( self, other_series ) )
 
 pd.Series.to_dict_to = series_to_dictionary_to
-pd.Series.to_dictionary_to = series_to_dictionary_to</code></pre>
+pd.Series.to_dictionary_to = series_to_dictionary_to
+pd.Series.get_dict_to = series_to_dictionary_to
+pd.Series.get_dictionary_to = series_to_dictionary_to</code></pre>
 </details>
 </section>
 <section>
@@ -301,7 +311,9 @@ If that test returns True, this function will
 create a Python dict that embodies the function in question, making it easy
 to perform lookup operations.</p>
 <p>This function is added to the <code>Series</code> class, so you can call it as
-<code>mySeries.to_dictionary()</code> or just as <code>mySeries.to_dict()</code>.</p></div>
+<code>mySeries.to_dictionary()</code> or just as <code>mySeries.to_dict()</code>.
+You can also
+write <code>mySeries.get_dictionary()</code> or <code>mySeries.get_dict()</code>.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -314,7 +326,8 @@ to perform lookup operations.</p>
         to perform lookup operations.
 
         This function is added to the `Series` class, so you can call it as
-        `mySeries.to_dictionary()` or just as `mySeries.to_dict()`.
+        `mySeries.to_dictionary()` or just as `mySeries.to_dict()`.  You can also
+        write `mySeries.get_dictionary()` or `mySeries.get_dict()`.
         &#34;&#34;&#34;
         return dict( zip( self.index.to_series(), self ) )</code></pre>
 </details>
@@ -330,7 +343,10 @@ If that test returns
 in question, making it easy to perform lookup operations.</p>
 <p>This function is added to the <code>Series</code> class, so you can call it as
 <code>mySeries.to_dictionary_to(yourSeries)</code> or just as
-<code>mySeries.to_dict_to(yourSeries)</code>.</p></div>
+<code>mySeries.to_dict_to(yourSeries)</code>.
+Because "to_dictionary_to" is awkward,
+you can also use <code>mySeries.get_dictionary_to(yourSeries)</code> or
+<code>mySeries.get_dict_to(yourSeries)</code>.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -344,7 +360,9 @@ in question, making it easy to perform lookup operations.</p>
 
         This function is added to the `Series` class, so you can call it as
         `mySeries.to_dictionary_to(yourSeries)` or just as
-        `mySeries.to_dict_to(yourSeries)`.
+        `mySeries.to_dict_to(yourSeries)`.  Because &#34;to_dictionary_to&#34; is awkward,
+        you can also use `mySeries.get_dictionary_to(yourSeries)` or
+        `mySeries.get_dict_to(yourSeries)`.
         &#34;&#34;&#34;
         return dict( zip( self, other_series ) )</code></pre>
 </details>
@@ -359,7 +377,7 @@ If that test returns True, this function will
 create a <code>FiniteFunction</code> instance that embodies the function in question,
 making it easy to apply the function to do lookups.</p>
 <p>This function is added to the <code>Series</code> class, so you can call it as
-<code>mySeries.to_function()</code>.</p></div>
+<code>mySeries.to_function()</code> or <code>mySeries.get_function()</code>.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -372,7 +390,7 @@ making it easy to apply the function to do lookups.</p>
         making it easy to apply the function to do lookups.
 
         This function is added to the `Series` class, so you can call it as
-        `mySeries.to_function()`.
+        `mySeries.to_function()` or `mySeries.get_function()`.
         &#34;&#34;&#34;
         return FiniteFunction( self.index.to_series(), self )</code></pre>
 </details>
@@ -388,7 +406,8 @@ If that test returns
 the function in question, making it easy to apply the function to do
 lookups.</p>
 <p>This function is added to the <code>Series</code> class, so you can call it as
-<code>mySeries.to_function_to(yourSeries)</code>.</p></div>
+<code>mySeries.to_function_to(yourSeries)</code> or
+<code>mySeries.get_function_to(yourSeries)</code>.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -402,7 +421,8 @@ lookups.</p>
         lookups.
 
         This function is added to the `Series` class, so you can call it as
-        `mySeries.to_function_to(yourSeries)`.
+        `mySeries.to_function_to(yourSeries)` or
+        `mySeries.get_function_to(yourSeries)`.
         &#34;&#34;&#34;
         return FiniteFunction( self, other_series )</code></pre>
 </details>
