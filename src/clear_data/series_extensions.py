@@ -1,5 +1,6 @@
 
 import pandas as pd
+from clear_data.finite_function import FiniteFunction
 
 def series_has_duplicates ( self ):
 	"""
@@ -56,3 +57,25 @@ def series_is_a_function ( self ):
 	return is_a_finite_function( self.index.to_series(), self )
 
 pd.Series.is_a_function = series_is_a_function
+
+def series_to_function ( self ):
+	"""
+	See the documentation for is_a_function() to understand how to view a
+	Series as a function.  If that test returns True, this function will create
+	a FiniteFunction instance that embodies the function in question, making it
+	easy to apply the function to do lookups.
+	"""
+	return FiniteFunction( self.index.to_series(), self )
+
+pd.Series.to_function = series_to_function
+
+def series_to_function_to ( self, other_series ):
+	"""
+	See the documentation for is_a_function_to(other) to understand how to view
+	one Series as a function to another Series.  If that test returns True, this
+	function will create a FiniteFunction instance that embodies the function in
+	question, making it easy to apply the function to do lookups.
+	"""
+	return FiniteFunction( self, other_series )
+
+pd.Series.to_function_to = series_to_function_to

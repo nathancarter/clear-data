@@ -39,5 +39,43 @@ class TestSeriesBasics( unittest.TestCase ):
 		unique_outputs.index = [ 0, 0, 1, 2 ]
 		self.assertFalse( unique_outputs.is_a_function() )
 
+	def test_to_function ( self ):
+		# recreate same I/O sets from the previous test function
+		unique_inputs = pd.Series( [ 1, 2, 3, 4 ] )
+		repeat_inputs = pd.Series( [ 1, 2, 1, 3 ] )
+		unique_outputs = pd.Series( [ 'a', 'b', 'c', 'd' ] )
+		repeat_outputs1 = pd.Series( [ 'x', 'x', 'y', 'y' ] )
+		repeat_outputs2 = pd.Series( [ 'x', 'y', 'x', 'y' ] )
+		# create all the functions that are valid to create (see previous test)
+		f1 = unique_inputs.to_function_to( unique_outputs )
+		f2 = unique_inputs.to_function_to( repeat_outputs1 )
+		f3 = unique_inputs.to_function_to( repeat_outputs2 )
+		f4 = repeat_inputs.to_function_to( repeat_outputs2 )
+		f5 = unique_outputs.to_function()
+		f6 = repeat_outputs1.to_function()
+		f7 = repeat_outputs2.to_function()
+		# test three inputs and outputs for each
+		self.assertEqual( f1( 1 ), 'a' )
+		self.assertEqual( f1( 3 ), 'c' )
+		self.assertEqual( f1( '1' ), None )
+		self.assertEqual( f2( 2 ), 'x' )
+		self.assertEqual( f2( 4 ), 'y' )
+		self.assertEqual( f2( 0 ), None )
+		self.assertEqual( f3( 1 ), 'x' )
+		self.assertEqual( f3( 2 ), 'y' )
+		self.assertEqual( f3( -1 ), None )
+		self.assertEqual( f4( 1 ), 'x' )
+		self.assertEqual( f4( 3 ), 'y' )
+		self.assertEqual( f4( 4 ), None )
+		self.assertEqual( f5( 1 ), 'b' )
+		self.assertEqual( f5( 'a' ), None )
+		self.assertEqual( f5( 'd' ), None )
+		self.assertEqual( f6( -1 ), None )
+		self.assertEqual( f6( 1 ), 'x' )
+		self.assertEqual( f6( 'z' ), None )
+		self.assertEqual( f7( 0 ), 'x' )
+		self.assertEqual( f7( 3 ), 'y' )
+		self.assertEqual( f7( 4 ), None )
+
 if __name__ == '__main__':
 	unittest.main()
