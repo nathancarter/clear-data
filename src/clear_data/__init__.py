@@ -1,3 +1,15 @@
 
+"""
+Working with data in pandas should not require arcane knowledge.
+
+ * You should not have to know the secret of
+   `dict( zip( df.date, df.temperature ) )`
+ * Instead, you should be able to write
+   `df.date.get_function_to( df.temperature )`
+
+More examples will be put here.  There is no release yet; this is a brand new,
+experimental project.
+"""
+
 import clear_data.series_extensions
 from clear_data.finite_function import FiniteFunction
