@@ -8,6 +8,12 @@
             "type": "shell",
             "command": "python3 -m unittest -v tests/*",
             "problemMatcher": []
+        },
+        {
+            "label": "Build source docs",
+            "type": "shell",
+            "command": "python3 -m pdoc --html src/clear_data --force",
+            "problemMatcher": []
         }
     ]
 }
