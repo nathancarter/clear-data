@@ -79,3 +79,27 @@ def series_to_function_to ( self, other_series ):
 	return FiniteFunction( self, other_series )
 
 pd.Series.to_function_to = series_to_function_to
+
+def series_to_dictionary ( self ):
+	"""
+	See the documentation for is_a_function() to understand how to view a
+	Series as a function.  If that test returns True, this function will create
+	a Python dict that embodies the function in question, making it easy to
+	perform lookup operations.
+	"""
+	return dict( zip( self.index.to_series(), self ) )
+
+pd.Series.to_dict = series_to_dictionary
+pd.Series.to_dictionary = series_to_dictionary
+
+def series_to_dictionary_to ( self, other_series ):
+	"""
+	See the documentation for is_a_function_to(other) to understand how to view
+	one Series as a function to another Series.  If that test returns True, this
+	function will create a Python dict that embodies the function in question,
+	making it easy to perform lookup operations.
+	"""
+	return dict( zip( self, other_series ) )
+
+pd.Series.to_dict_to = series_to_dictionary_to
+pd.Series.to_dictionary_to = series_to_dictionary_to
