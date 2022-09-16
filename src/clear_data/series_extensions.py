@@ -79,11 +79,12 @@ def series_to_function ( self ):
 	making it easy to apply the function to do lookups.
 
 	This function is added to the `Series` class, so you can call it as
-	`mySeries.to_function()`.
+	`mySeries.to_function()` or `mySeries.get_function()`.
 	"""
 	return FiniteFunction( self.index.to_series(), self )
 
 pd.Series.to_function = series_to_function
+pd.Series.get_function = series_to_function
 
 def series_to_function_to ( self, other_series ):
 	"""
@@ -94,11 +95,13 @@ def series_to_function_to ( self, other_series ):
 	lookups.
 
 	This function is added to the `Series` class, so you can call it as
-	`mySeries.to_function_to(yourSeries)`.
+	`mySeries.to_function_to(yourSeries)` or
+	`mySeries.get_function_to(yourSeries)`.
 	"""
 	return FiniteFunction( self, other_series )
 
 pd.Series.to_function_to = series_to_function_to
+pd.Series.get_function_to = series_to_function_to
 
 def series_to_dictionary ( self ):
 	"""
@@ -108,12 +111,15 @@ def series_to_dictionary ( self ):
 	to perform lookup operations.
 
 	This function is added to the `Series` class, so you can call it as
-	`mySeries.to_dictionary()` or just as `mySeries.to_dict()`.
+	`mySeries.to_dictionary()` or just as `mySeries.to_dict()`.  You can also
+	write `mySeries.get_dictionary()` or `mySeries.get_dict()`.
 	"""
 	return dict( zip( self.index.to_series(), self ) )
 
 pd.Series.to_dict = series_to_dictionary
 pd.Series.to_dictionary = series_to_dictionary
+pd.Series.get_dict = series_to_dictionary
+pd.Series.get_dictionary = series_to_dictionary
 
 def series_to_dictionary_to ( self, other_series ):
 	"""
@@ -124,9 +130,13 @@ def series_to_dictionary_to ( self, other_series ):
 
 	This function is added to the `Series` class, so you can call it as
 	`mySeries.to_dictionary_to(yourSeries)` or just as
-	`mySeries.to_dict_to(yourSeries)`.
+	`mySeries.to_dict_to(yourSeries)`.  Because "to_dictionary_to" is awkward,
+	you can also use `mySeries.get_dictionary_to(yourSeries)` or
+	`mySeries.get_dict_to(yourSeries)`.
 	"""
 	return dict( zip( self, other_series ) )
 
 pd.Series.to_dict_to = series_to_dictionary_to
 pd.Series.to_dictionary_to = series_to_dictionary_to
+pd.Series.get_dict_to = series_to_dictionary_to
+pd.Series.get_dictionary_to = series_to_dictionary_to
