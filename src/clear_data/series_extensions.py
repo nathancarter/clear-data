@@ -56,7 +56,7 @@ def series_is_a_function ( self, other_series=None ):
 	Series' entries.
 
 	This function is added to the `Series` class, so you can call it as
-	`mySeries.is_a_function_to(yourSeries)`.
+	`mySeries.is_a_function(yourSeries)`.
 	"""
 	if other_series is not None:
 		return _is_a_finite_function( self, other_series )
