@@ -34,7 +34,7 @@ def dataframe_is_a_function ( self, input, output ):
 pd.DataFrame.is_a_function = dataframe_is_a_function
 pd.DataFrame.can_lookup = dataframe_is_a_function
 
-def dataframe_get_function ( self, input, output ):
+def dataframe_to_function ( self, input, output ):
     """
     If the given DataFrame represents a function from the given input column
     to the given output column, which you can test using
@@ -48,8 +48,7 @@ def dataframe_get_function ( self, input, output ):
     DataFrame's index, which will be converted to a Series for you.
 
 	This function is added to the `DataFrame` class, so you can call it as
-	`df.is_a_function(input_col,output_col)` or as
-    `df.can_lookup(input_col,output_col)`.
+	`df.get_function(input_col,output_col)`.
     """
     # ensure input is a Series
     if type( input ) is str:
@@ -62,7 +61,6 @@ def dataframe_get_function ( self, input, output ):
     elif isinstance( output, pd.Index ):
         output = output.to_series()
     # do the work
-    return input.is_a_function( output )
+    return input.get_function( output )
 
-pd.DataFrame.is_a_function = dataframe_is_a_function
-pd.DataFrame.can_lookup = dataframe_is_a_function
+pd.DataFrame.to_function = dataframe_to_function
