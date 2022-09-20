@@ -56,7 +56,7 @@ class FiniteFunction:
             inputs = pd.Series( inputs ) # defaults to range index -- good
         if not isinstance( outputs, pd.Series ):
             outputs = pd.Series( outputs ) # default to range index -- good
-        if not inputs.is_a_function_to( outputs ):
+        if not inputs.is_a_function( outputs ):
             raise ValueError( &#39;Inputs and outpus do not form a function&#39; )
         self._inputs = inputs
         self._outputs = outputs
@@ -102,7 +102,7 @@ class FiniteFunction:
         &#34;&#34;&#34;
         Same as `is_invertible()`.
         &#34;&#34;&#34;
-        return self._outputs.is_a_function_to( self._inputs )
+        return self._outputs.is_a_function( self._inputs )
     
     def is_invertible ( self ):
         &#34;&#34;&#34;
@@ -189,7 +189,7 @@ evaluate it on the input 2 with the code <code>f( 2 )</code> (which returns 4).<
             inputs = pd.Series( inputs ) # defaults to range index -- good
         if not isinstance( outputs, pd.Series ):
             outputs = pd.Series( outputs ) # default to range index -- good
-        if not inputs.is_a_function_to( outputs ):
+        if not inputs.is_a_function( outputs ):
             raise ValueError( &#39;Inputs and outpus do not form a function&#39; )
         self._inputs = inputs
         self._outputs = outputs
@@ -235,7 +235,7 @@ evaluate it on the input 2 with the code <code>f( 2 )</code> (which returns 4).<
         &#34;&#34;&#34;
         Same as `is_invertible()`.
         &#34;&#34;&#34;
-        return self._outputs.is_a_function_to( self._inputs )
+        return self._outputs.is_a_function( self._inputs )
     
     def is_invertible ( self ):
         &#34;&#34;&#34;
@@ -321,7 +321,7 @@ Trying to create this will throw an error unless
     &#34;&#34;&#34;
     Same as `is_invertible()`.
     &#34;&#34;&#34;
-    return self._outputs.is_a_function_to( self._inputs )</code></pre>
+    return self._outputs.is_a_function( self._inputs )</code></pre>
 </details>
 </dd>
 <dt id="clear_data.finite_function.FiniteFunction.is_invertible"><code class="name flex">

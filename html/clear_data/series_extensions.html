@@ -62,12 +62,12 @@ def _is_a_finite_function ( inputs, outputs ):
         as_a_dict = dict( zip( inputs, outputs ) )
         return all( inputs.map( as_a_dict ) == outputs )
 
-def series_is_a_function_to ( self, other_series ):
+def series_is_a_function ( self, other_series=None ):
         &#34;&#34;&#34;
-        If we view this Series as a list of inputs, and the other_series as a
+        If we view this Series as a list of inputs, and the `other_series` as a
         corresponding list of outputs, do those pairs form a function?  In other
         words, does every input in this Series line up with exactly one output in
-        the other_series, so that we could reliably do a lookup operation?
+        the `other_series`, so that we could reliably do a lookup operation?
         The result is a boolean.
 
         For example, if this series were `[1,2,3]` and the other `[&#39;a&#39;,&#39;b&#39;,&#39;a&#39;]`,
@@ -76,97 +76,63 @@ def series_is_a_function_to ( self, other_series ):
         and the other `[&#39;a&#39;,&#39;b&#39;,&#39;a&#39;,&#39;c&#39;]`, the result would be false, because for
         the input 1, it is unclear whether the output should be `&#39;a&#39;` or `&#39;c&#39;`.
 
-        This function is added to the `Series` class, so you can call it as
-        `mySeries.is_a_function_to(yourSeries)`.
-        &#34;&#34;&#34;
-        return _is_a_finite_function( self, other_series )
-
-pd.Series.is_a_function_to = series_is_a_function_to
-
-def series_is_a_function ( self ):
-        &#34;&#34;&#34;
-        If we view this Series&#39; index as a list of inputs, and its entries as a
-        corresponding list of outputs, do those pairs form a function?  See the
-        documentation for `series_is_a_function_to(other)` for more details; this
-        function asks about mapping the Series&#39; inputs to its own entries, rather
-        than a separate Series&#39; entries.
+        If we omit the parameter `other_series`, then we can view this Series&#39;
+        index as a list of inputs, and its entries as a corresponding list of
+        outputs, and ask whether those pairs form a function.  That is, we ask
+        about mapping the Series&#39; index to its own entries, rather than a separate
+        Series&#39; entries.
 
         This function is added to the `Series` class, so you can call it as
-        `mySeries.is_a_function()`.
+        `mySeries.is_a_function(yourSeries)`.
         &#34;&#34;&#34;
-        return _is_a_finite_function( self.index.to_series(), self )
+        if other_series is not None:
+                return _is_a_finite_function( self, other_series )
+        else:
+                return _is_a_finite_function( self.index.to_series(), self )
 
 pd.Series.is_a_function = series_is_a_function
 
-def series_to_function ( self ):
+def series_to_function ( self, other_series=None ):
         &#34;&#34;&#34;
         See the documentation for `series_is_a_function()` to understand how to view
         a Series as a function.  If that test returns True, this function will
         create a `FiniteFunction` instance that embodies the function in question,
-        making it easy to apply the function to do lookups.
+        making it easy to apply the function to do lookups.  You can pass a
+        parameter or not, and the behavior is the same as it is for
+        `series_is_a_function()`.
 
         This function is added to the `Series` class, so you can call it as
         `mySeries.to_function()` or `mySeries.get_function()`.
         &#34;&#34;&#34;
-        return FiniteFunction( self.index.to_series(), self )
+        if other_series is not None:
+                return FiniteFunction( self, other_series )
+        else:
+                return FiniteFunction( self.index.to_series(), self )
 
 pd.Series.to_function = series_to_function
 pd.Series.get_function = series_to_function
 
-def series_to_function_to ( self, other_series ):
-        &#34;&#34;&#34;
-        See the documentation for `series_is_a_function_to(other)` to understand how
-        to view one Series as a function to another Series.  If that test returns
-        `True`, this function will create a FiniteFunction instance that embodies
-        the function in question, making it easy to apply the function to do
-        lookups.
-
-        This function is added to the `Series` class, so you can call it as
-        `mySeries.to_function_to(yourSeries)` or
-        `mySeries.get_function_to(yourSeries)`.
-        &#34;&#34;&#34;
-        return FiniteFunction( self, other_series )
-
-pd.Series.to_function_to = series_to_function_to
-pd.Series.get_function_to = series_to_function_to
-
-def series_to_dictionary ( self ):
+def series_to_dictionary ( self, other_series=None ):
         &#34;&#34;&#34;
         See the documentation for `series_is_a_function()` to understand how to view
         a Series as a function.  If that test returns True, this function will
         create a Python dict that embodies the function in question, making it easy
-        to perform lookup operations.
+        to perform lookup operations.  You can pass a parameter or not, and the
+        behavior is the same as it is for `series_is_a_function()`.
 
         This function is added to the `Series` class, so you can call it as
         `mySeries.to_dictionary()` or just as `mySeries.to_dict()`.  You can also
         write `mySeries.get_dictionary()` or `mySeries.get_dict()`.
         &#34;&#34;&#34;
-        return dict( zip( self.index.to_series(), self ) )
+        if other_series is not None:
+                return dict( zip( self, other_series ) )
+        else:
+                return dict( zip( self.index.to_series(), self ) )
 
 pd.Series.to_dict = series_to_dictionary
 pd.Series.to_dictionary = series_to_dictionary
 pd.Series.get_dict = series_to_dictionary
-pd.Series.get_dictionary = series_to_dictionary
-
-def series_to_dictionary_to ( self, other_series ):
-        &#34;&#34;&#34;
-        See the documentation for `series_is_a_function_to(other)` to understand how
-        to view one Series as a function to another Series.  If that test returns
-        `True`, this function will create a Python dict that embodies the function
-        in question, making it easy to perform lookup operations.
-
-        This function is added to the `Series` class, so you can call it as
-        `mySeries.to_dictionary_to(yourSeries)` or just as
-        `mySeries.to_dict_to(yourSeries)`.  Because &#34;to_dictionary_to&#34; is awkward,
-        you can also use `mySeries.get_dictionary_to(yourSeries)` or
-        `mySeries.get_dict_to(yourSeries)`.
-        &#34;&#34;&#34;
-        return dict( zip( self, other_series ) )
-
-pd.Series.to_dict_to = series_to_dictionary_to
-pd.Series.to_dictionary_to = series_to_dictionary_to
-pd.Series.get_dict_to = series_to_dictionary_to
-pd.Series.get_dictionary_to = series_to_dictionary_to</code></pre>
+pd.Series.get_dictionary = series_to_dictionary</code></pre>
 </details>
 </section>
 <section>
@@ -230,44 +196,14 @@ result of the function <code><a title="clear_data.series_extensions.series_has_d
 </details>
 </dd>
 <dt id="clear_data.series_extensions.series_is_a_function"><code class="name flex">
-<span>def <span class="ident">series_is_a_function</span></span>(<span>self)</span>
+<span>def <span class="ident">series_is_a_function</span></span>(<span>self, other_series=None)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>If we view this Series' index as a list of inputs, and its entries as a
-corresponding list of outputs, do those pairs form a function?
-See the
-documentation for <code><a title="clear_data.series_extensions.series_is_a_function_to" href="#clear_data.series_extensions.series_is_a_function_to">series_is_a_function_to()</a>(other)</code> for more details; this
-function asks about mapping the Series' inputs to its own entries, rather
-than a separate Series' entries.</p>
-<p>This function is added to the <code>Series</code> class, so you can call it as
-<code>mySeries.is_a_function()</code>.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def series_is_a_function ( self ):
-        &#34;&#34;&#34;
-        If we view this Series&#39; index as a list of inputs, and its entries as a
-        corresponding list of outputs, do those pairs form a function?  See the
-        documentation for `series_is_a_function_to(other)` for more details; this
-        function asks about mapping the Series&#39; inputs to its own entries, rather
-        than a separate Series&#39; entries.
-
-        This function is added to the `Series` class, so you can call it as
-        `mySeries.is_a_function()`.
-        &#34;&#34;&#34;
-        return _is_a_finite_function( self.index.to_series(), self )</code></pre>
-</details>
-</dd>
-<dt id="clear_data.series_extensions.series_is_a_function_to"><code class="name flex">
-<span>def <span class="ident">series_is_a_function_to</span></span>(<span>self, other_series)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>If we view this Series as a list of inputs, and the other_series as a
+<div class="desc"><p>If we view this Series as a list of inputs, and the <code>other_series</code> as a
 corresponding list of outputs, do those pairs form a function?
 In other
 words, does every input in this Series line up with exactly one output in
-the other_series, so that we could reliably do a lookup operation?
+the <code>other_series</code>, so that we could reliably do a lookup operation?
 The result is a boolean.</p>
 <p>For example, if this series were <code>[1,2,3]</code> and the other <code>['a','b','a']</code>,
 the result would be true, because no matter which input we look up (1, 2, or
@@ -275,18 +211,24 @@ the result would be true, because no matter which input we look up (1, 2, or
 But if this series were <code>[1,2,3,1]</code>
 and the other <code>['a','b','a','c']</code>, the result would be false, because for
 the input 1, it is unclear whether the output should be <code>'a'</code> or <code>'c'</code>.</p>
+<p>If we omit the parameter <code>other_series</code>, then we can view this Series'
+index as a list of inputs, and its entries as a corresponding list of
+outputs, and ask whether those pairs form a function.
+That is, we ask
+about mapping the Series' index to its own entries, rather than a separate
+Series' entries.</p>
 <p>This function is added to the <code>Series</code> class, so you can call it as
-<code>mySeries.is_a_function_to(yourSeries)</code>.</p></div>
+<code>mySeries.is_a_function(yourSeries)</code>.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def series_is_a_function_to ( self, other_series ):
+<pre><code class="python">def series_is_a_function ( self, other_series=None ):
         &#34;&#34;&#34;
-        If we view this Series as a list of inputs, and the other_series as a
+        If we view this Series as a list of inputs, and the `other_series` as a
         corresponding list of outputs, do those pairs form a function?  In other
         words, does every input in this Series line up with exactly one output in
-        the other_series, so that we could reliably do a lookup operation?
+        the `other_series`, so that we could reliably do a lookup operation?
         The result is a boolean.
 
         For example, if this series were `[1,2,3]` and the other `[&#39;a&#39;,&#39;b&#39;,&#39;a&#39;]`,
@@ -295,21 +237,32 @@ the input 1, it is unclear whether the output should be <code>'a'</code> or <cod
         and the other `[&#39;a&#39;,&#39;b&#39;,&#39;a&#39;,&#39;c&#39;]`, the result would be false, because for
         the input 1, it is unclear whether the output should be `&#39;a&#39;` or `&#39;c&#39;`.
 
+        If we omit the parameter `other_series`, then we can view this Series&#39;
+        index as a list of inputs, and its entries as a corresponding list of
+        outputs, and ask whether those pairs form a function.  That is, we ask
+        about mapping the Series&#39; index to its own entries, rather than a separate
+        Series&#39; entries.
+
         This function is added to the `Series` class, so you can call it as
-        `mySeries.is_a_function_to(yourSeries)`.
+        `mySeries.is_a_function(yourSeries)`.
         &#34;&#34;&#34;
-        return _is_a_finite_function( self, other_series )</code></pre>
+        if other_series is not None:
+                return _is_a_finite_function( self, other_series )
+        else:
+                return _is_a_finite_function( self.index.to_series(), self )</code></pre>
 </details>
 </dd>
 <dt id="clear_data.series_extensions.series_to_dictionary"><code class="name flex">
-<span>def <span class="ident">series_to_dictionary</span></span>(<span>self)</span>
+<span>def <span class="ident">series_to_dictionary</span></span>(<span>self, other_series=None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>See the documentation for <code><a title="clear_data.series_extensions.series_is_a_function" href="#clear_data.series_extensions.series_is_a_function">series_is_a_function()</a></code> to understand how to view
 a Series as a function.
 If that test returns True, this function will
 create a Python dict that embodies the function in question, making it easy
-to perform lookup operations.</p>
+to perform lookup operations.
+You can pass a parameter or not, and the
+behavior is the same as it is for <code><a title="clear_data.series_extensions.series_is_a_function" href="#clear_data.series_extensions.series_is_a_function">series_is_a_function()</a></code>.</p>
 <p>This function is added to the <code>Series</code> class, so you can call it as
 <code>mySeries.to_dictionary()</code> or just as <code>mySeries.to_dict()</code>.
 You can also
@@ -318,113 +271,58 @@ write <code>mySeries.get_dictionary()</code> or <code>mySeries.get_dict()</code>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def series_to_dictionary ( self ):
+<pre><code class="python">def series_to_dictionary ( self, other_series=None ):
         &#34;&#34;&#34;
         See the documentation for `series_is_a_function()` to understand how to view
         a Series as a function.  If that test returns True, this function will
         create a Python dict that embodies the function in question, making it easy
-        to perform lookup operations.
+        to perform lookup operations.  You can pass a parameter or not, and the
+        behavior is the same as it is for `series_is_a_function()`.
 
         This function is added to the `Series` class, so you can call it as
         `mySeries.to_dictionary()` or just as `mySeries.to_dict()`.  You can also
         write `mySeries.get_dictionary()` or `mySeries.get_dict()`.
         &#34;&#34;&#34;
-        return dict( zip( self.index.to_series(), self ) )</code></pre>
-</details>
-</dd>
-<dt id="clear_data.series_extensions.series_to_dictionary_to"><code class="name flex">
-<span>def <span class="ident">series_to_dictionary_to</span></span>(<span>self, other_series)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>See the documentation for <code><a title="clear_data.series_extensions.series_is_a_function_to" href="#clear_data.series_extensions.series_is_a_function_to">series_is_a_function_to()</a>(other)</code> to understand how
-to view one Series as a function to another Series.
-If that test returns
-<code>True</code>, this function will create a Python dict that embodies the function
-in question, making it easy to perform lookup operations.</p>
-<p>This function is added to the <code>Series</code> class, so you can call it as
-<code>mySeries.to_dictionary_to(yourSeries)</code> or just as
-<code>mySeries.to_dict_to(yourSeries)</code>.
-Because "to_dictionary_to" is awkward,
-you can also use <code>mySeries.get_dictionary_to(yourSeries)</code> or
-<code>mySeries.get_dict_to(yourSeries)</code>.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def series_to_dictionary_to ( self, other_series ):
-        &#34;&#34;&#34;
-        See the documentation for `series_is_a_function_to(other)` to understand how
-        to view one Series as a function to another Series.  If that test returns
-        `True`, this function will create a Python dict that embodies the function
-        in question, making it easy to perform lookup operations.
-
-        This function is added to the `Series` class, so you can call it as
-        `mySeries.to_dictionary_to(yourSeries)` or just as
-        `mySeries.to_dict_to(yourSeries)`.  Because &#34;to_dictionary_to&#34; is awkward,
-        you can also use `mySeries.get_dictionary_to(yourSeries)` or
-        `mySeries.get_dict_to(yourSeries)`.
-        &#34;&#34;&#34;
-        return dict( zip( self, other_series ) )</code></pre>
+        if other_series is not None:
+                return dict( zip( self, other_series ) )
+        else:
+                return dict( zip( self.index.to_series(), self ) )</code></pre>
 </details>
 </dd>
 <dt id="clear_data.series_extensions.series_to_function"><code class="name flex">
-<span>def <span class="ident">series_to_function</span></span>(<span>self)</span>
+<span>def <span class="ident">series_to_function</span></span>(<span>self, other_series=None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>See the documentation for <code><a title="clear_data.series_extensions.series_is_a_function" href="#clear_data.series_extensions.series_is_a_function">series_is_a_function()</a></code> to understand how to view
 a Series as a function.
 If that test returns True, this function will
 create a <code>FiniteFunction</code> instance that embodies the function in question,
-making it easy to apply the function to do lookups.</p>
+making it easy to apply the function to do lookups.
+You can pass a
+parameter or not, and the behavior is the same as it is for
+<code><a title="clear_data.series_extensions.series_is_a_function" href="#clear_data.series_extensions.series_is_a_function">series_is_a_function()</a></code>.</p>
 <p>This function is added to the <code>Series</code> class, so you can call it as
 <code>mySeries.to_function()</code> or <code>mySeries.get_function()</code>.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def series_to_function ( self ):
+<pre><code class="python">def series_to_function ( self, other_series=None ):
         &#34;&#34;&#34;
         See the documentation for `series_is_a_function()` to understand how to view
         a Series as a function.  If that test returns True, this function will
         create a `FiniteFunction` instance that embodies the function in question,
-        making it easy to apply the function to do lookups.
+        making it easy to apply the function to do lookups.  You can pass a
+        parameter or not, and the behavior is the same as it is for
+        `series_is_a_function()`.
 
         This function is added to the `Series` class, so you can call it as
         `mySeries.to_function()` or `mySeries.get_function()`.
         &#34;&#34;&#34;
-        return FiniteFunction( self.index.to_series(), self )</code></pre>
-</details>
-</dd>
-<dt id="clear_data.series_extensions.series_to_function_to"><code class="name flex">
-<span>def <span class="ident">series_to_function_to</span></span>(<span>self, other_series)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>See the documentation for <code><a title="clear_data.series_extensions.series_is_a_function_to" href="#clear_data.series_extensions.series_is_a_function_to">series_is_a_function_to()</a>(other)</code> to understand how
-to view one Series as a function to another Series.
-If that test returns
-<code>True</code>, this function will create a FiniteFunction instance that embodies
-the function in question, making it easy to apply the function to do
-lookups.</p>
-<p>This function is added to the <code>Series</code> class, so you can call it as
-<code>mySeries.to_function_to(yourSeries)</code> or
-<code>mySeries.get_function_to(yourSeries)</code>.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def series_to_function_to ( self, other_series ):
-        &#34;&#34;&#34;
-        See the documentation for `series_is_a_function_to(other)` to understand how
-        to view one Series as a function to another Series.  If that test returns
-        `True`, this function will create a FiniteFunction instance that embodies
-        the function in question, making it easy to apply the function to do
-        lookups.
-
-        This function is added to the `Series` class, so you can call it as
-        `mySeries.to_function_to(yourSeries)` or
-        `mySeries.get_function_to(yourSeries)`.
-        &#34;&#34;&#34;
-        return FiniteFunction( self, other_series )</code></pre>
+        if other_series is not None:
+                return FiniteFunction( self, other_series )
+        else:
+                return FiniteFunction( self.index.to_series(), self )</code></pre>
 </details>
 </dd>
 </dl>
@@ -448,11 +346,8 @@ lookups.</p>
 <li><code><a title="clear_data.series_extensions.series_has_duplicates" href="#clear_data.series_extensions.series_has_duplicates">series_has_duplicates</a></code></li>
 <li><code><a title="clear_data.series_extensions.series_has_no_duplicates" href="#clear_data.series_extensions.series_has_no_duplicates">series_has_no_duplicates</a></code></li>
 <li><code><a title="clear_data.series_extensions.series_is_a_function" href="#clear_data.series_extensions.series_is_a_function">series_is_a_function</a></code></li>
-<li><code><a title="clear_data.series_extensions.series_is_a_function_to" href="#clear_data.series_extensions.series_is_a_function_to">series_is_a_function_to</a></code></li>
 <li><code><a title="clear_data.series_extensions.series_to_dictionary" href="#clear_data.series_extensions.series_to_dictionary">series_to_dictionary</a></code></li>
-<li><code><a title="clear_data.series_extensions.series_to_dictionary_to" href="#clear_data.series_extensions.series_to_dictionary_to">series_to_dictionary_to</a></code></li>
 <li><code><a title="clear_data.series_extensions.series_to_function" href="#clear_data.series_extensions.series_to_function">series_to_function</a></code></li>
-<li><code><a title="clear_data.series_extensions.series_to_function_to" href="#clear_data.series_extensions.series_to_function_to">series_to_function_to</a></code></li>
 </ul>
 </li>
 </ul>
