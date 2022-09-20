@@ -89,5 +89,45 @@ class TestDataFrameBasics( unittest.TestCase ):
         self.assertEqual( f7( 3 ), 'y' )
         self.assertEqual( f7( 4 ), None )
 
+    def test_to_dictionary ( self ):
+        # recreate same I/O sets from the previous test function
+        df = pd.DataFrame( {
+            "unique_inputs"   : [ 1, 2, 3, 4 ],
+            "repeat_inputs"   : [ 1, 2, 1, 3 ],
+            "unique_outputs"  : [ 'a', 'b', 'c', 'd' ],
+            "repeat_outputs1" : [ 'x', 'x', 'y', 'y' ],
+            "repeat_outputs2" : [ 'x', 'y', 'x', 'y' ]
+        } )
+        # create all the dictionaries that are valid to create (see previous test)
+        d1 = df.to_dictionary( 'unique_inputs', 'unique_outputs' )
+        d2 = df.to_dictionary( 'unique_inputs', 'repeat_outputs1' )
+        d3 = df.to_dictionary( 'unique_inputs', 'repeat_outputs2' )
+        d4 = df.to_dictionary( 'repeat_inputs', 'repeat_outputs2' )
+        d5 = df.to_dictionary( df.index, 'unique_outputs' )
+        d6 = df.to_dictionary( df.index, 'repeat_outputs1' )
+        d7 = df.to_dictionary( df.index, 'repeat_outputs2' )
+        # test three inputs and outputs for each
+        self.assertEqual( d1[ 1 ], 'a' )
+        self.assertEqual( d1[ 3 ], 'c' )
+        self.assertFalse( '1' in d1 )
+        self.assertEqual( d2[ 2 ], 'x' )
+        self.assertEqual( d2[ 4 ], 'y' )
+        self.assertFalse( 0 in d2 )
+        self.assertEqual( d3[ 1 ], 'x' )
+        self.assertEqual( d3[ 2 ], 'y' )
+        self.assertFalse( -1 in d3 )
+        self.assertEqual( d4[ 1 ], 'x' )
+        self.assertEqual( d4[ 3 ], 'y' )
+        self.assertFalse( 4 in d4 )
+        self.assertEqual( d5[ 1 ], 'b' )
+        self.assertFalse( 'a' in d5 )
+        self.assertFalse( 'd' in d5 )
+        self.assertFalse( -1 in d6 )
+        self.assertEqual( d6[ 1 ], 'x' )
+        self.assertFalse( 'z' in d6 )
+        self.assertEqual( d7[ 0 ], 'x' )
+        self.assertEqual( d7[ 3 ], 'y' )
+        self.assertFalse( 4 in d7 )
+
 if __name__ == '__main__':
     unittest.main()

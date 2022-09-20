@@ -48,7 +48,8 @@ def dataframe_to_function ( self, input, output ):
     DataFrame's index, which will be converted to a Series for you.
 
 	This function is added to the `DataFrame` class, so you can call it as
-	`df.get_function(input_col,output_col)`.
+	`df.to_function(input_col,output_col)` or
+    `df.get_function(input_col,output_col)`.
     """
     # ensure input is a Series
     if type( input ) is str:
@@ -61,6 +62,43 @@ def dataframe_to_function ( self, input, output ):
     elif isinstance( output, pd.Index ):
         output = output.to_series()
     # do the work
-    return input.get_function( output )
+    return input.to_function( output )
 
 pd.DataFrame.to_function = dataframe_to_function
+
+def dataframe_to_dictionary ( self, input, output ):
+    """
+    If the given DataFrame represents a function from the given input column
+    to the given output column, which you can test using
+    `dataframe_is_a_function`, then this function will construct for you a
+    Python dictionary embodying that relationship, that you can subsequently
+    use for lookups.
+
+    For the `input` and `output` parameters, you can pass column names, which
+    will be used to choose the relevant columns.  Or you can pass the columns
+    themselves, or any other series of the same length.  Or you can pass the
+    DataFrame's index, which will be converted to a Series for you.
+
+	This function is added to the `DataFrame` class, so you can call it as
+	`df.to_dictionary(input_col,output_col)`,
+	`df.get_dictionary(input_col,output_col)`,
+	`df.to_dict(input_col,output_col)`, or
+	`df.get_dict(input_col,output_col)`.
+    """
+    # ensure input is a Series
+    if type( input ) is str:
+        input = self[input]
+    elif isinstance( input, pd.Index ):
+        input = input.to_series()
+    # ensure output is a Series
+    if type( output ) is str:
+        output = self[output]
+    elif isinstance( output, pd.Index ):
+        output = output.to_series()
+    # do the work
+    return input.to_dictionary( output )
+
+pd.DataFrame.to_dictionary = dataframe_to_dictionary
+pd.DataFrame.get_dictionary = dataframe_to_dictionary
+pd.DataFrame.to_dict = dataframe_to_dictionary
+pd.DataFrame.get_dict = dataframe_to_dictionary
