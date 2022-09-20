@@ -12,4 +12,5 @@ experimental project.
 """
 
 import clear_data.series_extensions
+import clear_data.dataframe_extensions
 from clear_data.finite_function import FiniteFunction
