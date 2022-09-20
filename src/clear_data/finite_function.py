@@ -29,7 +29,7 @@ class FiniteFunction:
             inputs = pd.Series( inputs ) # defaults to range index -- good
         if not isinstance( outputs, pd.Series ):
             outputs = pd.Series( outputs ) # default to range index -- good
-        if not inputs.is_a_function_to( outputs ):
+        if not inputs.is_a_function( outputs ):
             raise ValueError( 'Inputs and outpus do not form a function' )
         self._inputs = inputs
         self._outputs = outputs
@@ -75,7 +75,7 @@ class FiniteFunction:
         """
         Same as `is_invertible()`.
         """
-        return self._outputs.is_a_function_to( self._inputs )
+        return self._outputs.is_a_function( self._inputs )
     
     def is_invertible ( self ):
         """
