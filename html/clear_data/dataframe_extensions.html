@@ -128,7 +128,40 @@ def dataframe_to_dictionary ( self, input, output ):
 pd.DataFrame.to_dictionary = dataframe_to_dictionary
 pd.DataFrame.get_dictionary = dataframe_to_dictionary
 pd.DataFrame.to_dict = dataframe_to_dictionary
-pd.DataFrame.get_dict = dataframe_to_dictionary</code></pre>
+pd.DataFrame.get_dict = dataframe_to_dictionary
+
+def dataframe_to_relation ( self, *column_names ):
+    &#34;&#34;&#34;
+    Given one or more column names, convert them into a relation, also called
+    a predicate.  For instance, if the DataFrame is about restaurants in
+    Philadelphia, we might use just the &#34;address&#34; and &#34;type&#34; columns,
+    producing a relation that might be described in English as &#34;There is a
+    restaurant of type Y at address X in Philadelphia.&#34;  The relation or
+    predicate produced is simply a membership test into the list of tuples
+    given by the columns provided.
+
+    If `df = pd.DataFrame({&#34;A&#34;:[1,2,3],&#34;B&#34;:[4,5,6]})` and
+    `R = dataframe_to_relation(df,&#34;A&#34;,&#34;B&#34;)`, then we would have
+    `R(1,4) == True` but `R(1,2) == False`, becauase `R` represents the
+    collection of tuples (1,4), (2,5), and (3,6).
+
+        This function is added to the `DataFrame` class, so you can call it using
+    any of the following means: `my_df.to_relation(columns...)`,
+    `my_df.to_predicate(columns...)` `my_df.get_relation(columns...)`, and
+    `my_df.get_predicate(columns...)`.
+
+    If you call this function on a DataFrame but do not specify the column
+    names, it assumes that all columns in the DataFrame should be used.
+    &#34;&#34;&#34;
+    if len( column_names ) == 0:
+        column_names = self.columns
+    columns = [ self[column_name] for column_name in column_names ]
+    return columns[0].to_relation( *columns[1:] )
+
+pd.DataFrame.to_relation = dataframe_to_relation
+pd.DataFrame.to_predicate = dataframe_to_relation
+pd.DataFrame.get_relation = dataframe_to_relation
+pd.DataFrame.get_predicate = dataframe_to_relation</code></pre>
 </details>
 </section>
 <section>
@@ -303,6 +336,63 @@ DataFrame's index, which will be converted to a Series for you.</p>
     return input.to_function( output )</code></pre>
 </details>
 </dd>
+<dt id="clear_data.dataframe_extensions.dataframe_to_relation"><code class="name flex">
+<span>def <span class="ident">dataframe_to_relation</span></span>(<span>self, *column_names)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Given one or more column names, convert them into a relation, also called
+a predicate.
+For instance, if the DataFrame is about restaurants in
+Philadelphia, we might use just the "address" and "type" columns,
+producing a relation that might be described in English as "There is a
+restaurant of type Y at address X in Philadelphia."
+The relation or
+predicate produced is simply a membership test into the list of tuples
+given by the columns provided.</p>
+<p>If <code>df = pd.DataFrame({"A":[1,2,3],"B":[4,5,6]})</code> and
+<code>R = dataframe_to_relation(df,"A","B")</code>, then we would have
+<code>R(1,4) == True</code> but <code>R(1,2) == False</code>, becauase <code>R</code> represents the
+collection of tuples (1,4), (2,5), and (3,6).</p>
+<pre><code>This function is added to the &lt;code&gt;DataFrame&lt;/code&gt; class, so you can call it using
+</code></pre>
+<p>any of the following means: <code>my_df.to_relation(columns&hellip;)</code>,
+<code>my_df.to_predicate(columns&hellip;)</code> <code>my_df.get_relation(columns&hellip;)</code>, and
+<code>my_df.get_predicate(columns&hellip;)</code>.</p>
+<p>If you call this function on a DataFrame but do not specify the column
+names, it assumes that all columns in the DataFrame should be used.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def dataframe_to_relation ( self, *column_names ):
+    &#34;&#34;&#34;
+    Given one or more column names, convert them into a relation, also called
+    a predicate.  For instance, if the DataFrame is about restaurants in
+    Philadelphia, we might use just the &#34;address&#34; and &#34;type&#34; columns,
+    producing a relation that might be described in English as &#34;There is a
+    restaurant of type Y at address X in Philadelphia.&#34;  The relation or
+    predicate produced is simply a membership test into the list of tuples
+    given by the columns provided.
+
+    If `df = pd.DataFrame({&#34;A&#34;:[1,2,3],&#34;B&#34;:[4,5,6]})` and
+    `R = dataframe_to_relation(df,&#34;A&#34;,&#34;B&#34;)`, then we would have
+    `R(1,4) == True` but `R(1,2) == False`, becauase `R` represents the
+    collection of tuples (1,4), (2,5), and (3,6).
+
+        This function is added to the `DataFrame` class, so you can call it using
+    any of the following means: `my_df.to_relation(columns...)`,
+    `my_df.to_predicate(columns...)` `my_df.get_relation(columns...)`, and
+    `my_df.get_predicate(columns...)`.
+
+    If you call this function on a DataFrame but do not specify the column
+    names, it assumes that all columns in the DataFrame should be used.
+    &#34;&#34;&#34;
+    if len( column_names ) == 0:
+        column_names = self.columns
+    columns = [ self[column_name] for column_name in column_names ]
+    return columns[0].to_relation( *columns[1:] )</code></pre>
+</details>
+</dd>
 </dl>
 </section>
 <section>
@@ -324,6 +414,7 @@ DataFrame's index, which will be converted to a Series for you.</p>
 <li><code><a title="clear_data.dataframe_extensions.dataframe_is_a_function" href="#clear_data.dataframe_extensions.dataframe_is_a_function">dataframe_is_a_function</a></code></li>
 <li><code><a title="clear_data.dataframe_extensions.dataframe_to_dictionary" href="#clear_data.dataframe_extensions.dataframe_to_dictionary">dataframe_to_dictionary</a></code></li>
 <li><code><a title="clear_data.dataframe_extensions.dataframe_to_function" href="#clear_data.dataframe_extensions.dataframe_to_function">dataframe_to_function</a></code></li>
+<li><code><a title="clear_data.dataframe_extensions.dataframe_to_relation" href="#clear_data.dataframe_extensions.dataframe_to_relation">dataframe_to_relation</a></code></li>
 </ul>
 </li>
 </ul>

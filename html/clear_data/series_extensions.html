@@ -132,7 +132,42 @@ def series_to_dictionary ( self, other_series=None ):
 pd.Series.to_dict = series_to_dictionary
 pd.Series.to_dictionary = series_to_dictionary
 pd.Series.get_dict = series_to_dictionary
-pd.Series.get_dictionary = series_to_dictionary</code></pre>
+pd.Series.get_dictionary = series_to_dictionary
+
+def series_to_relation ( self, *other_series ):
+    &#34;&#34;&#34;
+    Given one or more series of the same length, convert them into a relation,
+    also called a predicate.  For instance, given a table of data about
+    restaurants in Philadelphia, we might use just the &#34;address&#34; and &#34;type&#34;
+    columns, producing a relation that might be described in English as &#34;There
+    is a restaurant of type Y at address X in Philadelphia.&#34;  The relation or
+    predicate produced is simply a membership test into the list of tuples
+    given by the series provided.
+
+    If `X = pd.Series([1,2,3])` and `Y = pd.Series([4,5,6])` and
+    `Z = series_to_relation(X,Y)`, then we would have `Z(1,4) == True` but
+    `Z(1,2) == False`, becauase `Z` represents the collection of tuples
+    (1,4), (2,5), and (3,6).
+
+        This function is added to the `Series` class, so you can call it using any
+        of the following means: `my_series.to_relation(other)`,
+    `my_series.to_relation_with(other)`, `my_series.to_predicate(other)`
+    `my_series.to_predicate_with(other)`, `my_series.get_relation(other)`,
+    `my_series.get_relation_with(other)`, `my_series.get_predicate(other)`, and
+    `my_series.get_predicate_with(other)`.
+    &#34;&#34;&#34;
+    def result ( *args ):
+        return args in zip( *[ self, *other_series ] )
+    return result
+
+pd.Series.to_relation = series_to_relation
+pd.Series.to_relation_with = series_to_relation
+pd.Series.to_predicate = series_to_relation
+pd.Series.to_predicate_with = series_to_relation
+pd.Series.get_relation = series_to_relation
+pd.Series.get_relation_with = series_to_relation
+pd.Series.get_predicate = series_to_relation
+pd.Series.get_predicate_with = series_to_relation</code></pre>
 </details>
 </section>
 <section>
@@ -325,6 +360,61 @@ parameter or not, and the behavior is the same as it is for
                 return FiniteFunction( self.index.to_series(), self )</code></pre>
 </details>
 </dd>
+<dt id="clear_data.series_extensions.series_to_relation"><code class="name flex">
+<span>def <span class="ident">series_to_relation</span></span>(<span>self, *other_series)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Given one or more series of the same length, convert them into a relation,
+also called a predicate.
+For instance, given a table of data about
+restaurants in Philadelphia, we might use just the "address" and "type"
+columns, producing a relation that might be described in English as "There
+is a restaurant of type Y at address X in Philadelphia."
+The relation or
+predicate produced is simply a membership test into the list of tuples
+given by the series provided.</p>
+<p>If <code>X = pd.Series([1,2,3])</code> and <code>Y = pd.Series([4,5,6])</code> and
+<code>Z = series_to_relation(X,Y)</code>, then we would have <code>Z(1,4) == True</code> but
+<code>Z(1,2) == False</code>, becauase <code>Z</code> represents the collection of tuples
+(1,4), (2,5), and (3,6).</p>
+<pre><code>This function is added to the &lt;code&gt;Series&lt;/code&gt; class, so you can call it using any
+of the following means: &lt;code&gt;my\_series.to\_relation(other)&lt;/code&gt;,
+</code></pre>
+<p><code>my_series.to_relation_with(other)</code>, <code>my_series.to_predicate(other)</code>
+<code>my_series.to_predicate_with(other)</code>, <code>my_series.get_relation(other)</code>,
+<code>my_series.get_relation_with(other)</code>, <code>my_series.get_predicate(other)</code>, and
+<code>my_series.get_predicate_with(other)</code>.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def series_to_relation ( self, *other_series ):
+    &#34;&#34;&#34;
+    Given one or more series of the same length, convert them into a relation,
+    also called a predicate.  For instance, given a table of data about
+    restaurants in Philadelphia, we might use just the &#34;address&#34; and &#34;type&#34;
+    columns, producing a relation that might be described in English as &#34;There
+    is a restaurant of type Y at address X in Philadelphia.&#34;  The relation or
+    predicate produced is simply a membership test into the list of tuples
+    given by the series provided.
+
+    If `X = pd.Series([1,2,3])` and `Y = pd.Series([4,5,6])` and
+    `Z = series_to_relation(X,Y)`, then we would have `Z(1,4) == True` but
+    `Z(1,2) == False`, becauase `Z` represents the collection of tuples
+    (1,4), (2,5), and (3,6).
+
+        This function is added to the `Series` class, so you can call it using any
+        of the following means: `my_series.to_relation(other)`,
+    `my_series.to_relation_with(other)`, `my_series.to_predicate(other)`
+    `my_series.to_predicate_with(other)`, `my_series.get_relation(other)`,
+    `my_series.get_relation_with(other)`, `my_series.get_predicate(other)`, and
+    `my_series.get_predicate_with(other)`.
+    &#34;&#34;&#34;
+    def result ( *args ):
+        return args in zip( *[ self, *other_series ] )
+    return result</code></pre>
+</details>
+</dd>
 </dl>
 </section>
 <section>
@@ -348,6 +438,7 @@ parameter or not, and the behavior is the same as it is for
 <li><code><a title="clear_data.series_extensions.series_is_a_function" href="#clear_data.series_extensions.series_is_a_function">series_is_a_function</a></code></li>
 <li><code><a title="clear_data.series_extensions.series_to_dictionary" href="#clear_data.series_extensions.series_to_dictionary">series_to_dictionary</a></code></li>
 <li><code><a title="clear_data.series_extensions.series_to_function" href="#clear_data.series_extensions.series_to_function">series_to_function</a></code></li>
+<li><code><a title="clear_data.series_extensions.series_to_relation" href="#clear_data.series_extensions.series_to_relation">series_to_relation</a></code></li>
 </ul>
 </li>
 </ul>
