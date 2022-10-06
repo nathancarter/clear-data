@@ -1,5 +1,7 @@
 
 """
+## Purpose
+
 Working with data in pandas should not require arcane knowledge.
 
  * You should not have to know the secret of
@@ -7,8 +9,14 @@ Working with data in pandas should not require arcane knowledge.
  * Instead, you should be able to write
    `df.date.get_function( df.temperature )`
 
-More examples will be put here.  There is no release yet; this is a brand new,
-experimental project.
+## Examples
+
+See the [Examples Folder](https://github.com/nathancarter/clear-data/examples/)
+how you can use this API to make your pandas code simpler and more logical.
+
+## Release date?
+
+There is no release yet; this is a brand new, experimental project.
 """
 
 import clear_data.series_extensions
