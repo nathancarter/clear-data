@@ -106,3 +106,38 @@ pd.Series.to_dict = series_to_dictionary
 pd.Series.to_dictionary = series_to_dictionary
 pd.Series.get_dict = series_to_dictionary
 pd.Series.get_dictionary = series_to_dictionary
+
+def series_to_relation ( self, *other_series ):
+    """
+    Given one or more series of the same length, convert them into a relation,
+    also called a predicate.  For instance, given a table of data about
+    restaurants in Philadelphia, we might use just the "address" and "type"
+    columns, producing a relation that might be described in English as "There
+    is a restaurant of type Y at address X in Philadelphia."  The relation or
+    predicate produced is simply a membership test into the list of tuples
+    given by the series provided.
+
+    If `X = pd.Series([1,2,3])` and `Y = pd.Series([4,5,6])` and
+    `Z = series_to_relation(X,Y)`, then we would have `Z(1,4) == True` but
+    `Z(1,2) == False`, becauase `Z` represents the collection of tuples
+    (1,4), (2,5), and (3,6).
+
+	This function is added to the `Series` class, so you can call it using any
+	of the following means: `my_series.to_relation(other)`,
+    `my_series.to_relation_with(other)`, `my_series.to_predicate(other)`
+    `my_series.to_predicate_with(other)`, `my_series.get_relation(other)`,
+    `my_series.get_relation_with(other)`, `my_series.get_predicate(other)`, and
+    `my_series.get_predicate_with(other)`.
+    """
+    def result ( *args ):
+        return args in zip( *[ self, *other_series ] )
+    return result
+
+pd.Series.to_relation = series_to_relation
+pd.Series.to_relation_with = series_to_relation
+pd.Series.to_predicate = series_to_relation
+pd.Series.to_predicate_with = series_to_relation
+pd.Series.get_relation = series_to_relation
+pd.Series.get_relation_with = series_to_relation
+pd.Series.get_predicate = series_to_relation
+pd.Series.get_predicate_with = series_to_relation

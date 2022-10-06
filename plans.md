@@ -14,16 +14,6 @@ formats, including XLS[X], CSV, TSV, JSON, HTML, DB?, GRAPHML?
  * `DataFrame.save("filename")` uses the extension and does something
    smart, with output about what it did.
 
-# Relations and predicates
-
- * `Series.to_relation([other_series...])` with synonyms:
-    * `to_relation_with`, `to_predicate`, `to_predicate_with`,
-      `get_relation`, `get_relation_with`, `get_predicate`,
-      `get_predicate_with`
- * `DataFrame.to_relation(column_names...)` and all the analogous synonyms
-
-You can use these predicates in Python `assert`ions.
-
 # Filtering
 
 In all of these, there is an optional `kwarg` that is `efficient=False`,

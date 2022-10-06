@@ -102,3 +102,36 @@ pd.DataFrame.to_dictionary = dataframe_to_dictionary
 pd.DataFrame.get_dictionary = dataframe_to_dictionary
 pd.DataFrame.to_dict = dataframe_to_dictionary
 pd.DataFrame.get_dict = dataframe_to_dictionary
+
+def dataframe_to_relation ( self, *column_names ):
+    """
+    Given one or more column names, convert them into a relation, also called
+    a predicate.  For instance, if the DataFrame is about restaurants in
+    Philadelphia, we might use just the "address" and "type" columns,
+    producing a relation that might be described in English as "There is a
+    restaurant of type Y at address X in Philadelphia."  The relation or
+    predicate produced is simply a membership test into the list of tuples
+    given by the columns provided.
+
+    If `df = pd.DataFrame({"A":[1,2,3],"B":[4,5,6]})` and
+    `R = dataframe_to_relation(df,"A","B")`, then we would have
+    `R(1,4) == True` but `R(1,2) == False`, becauase `R` represents the
+    collection of tuples (1,4), (2,5), and (3,6).
+
+	This function is added to the `DataFrame` class, so you can call it using
+    any of the following means: `my_df.to_relation(columns...)`,
+    `my_df.to_predicate(columns...)` `my_df.get_relation(columns...)`, and
+    `my_df.get_predicate(columns...)`.
+
+    If you call this function on a DataFrame but do not specify the column
+    names, it assumes that all columns in the DataFrame should be used.
+    """
+    if len( column_names ) == 0:
+        column_names = self.columns
+    columns = [ self[column_name] for column_name in column_names ]
+    return columns[0].to_relation( *columns[1:] )
+
+pd.DataFrame.to_relation = dataframe_to_relation
+pd.DataFrame.to_predicate = dataframe_to_relation
+pd.DataFrame.get_relation = dataframe_to_relation
+pd.DataFrame.get_predicate = dataframe_to_relation
