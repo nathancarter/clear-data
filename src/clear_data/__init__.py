@@ -11,7 +11,7 @@ Working with data in pandas should not require arcane knowledge.
 
 ## Examples
 
-See the [Examples Folder](https://github.com/nathancarter/clear-data/examples/)
+See the [Examples Folder](https://github.com/nathancarter/clear-data/tree/main/examples)
 how you can use this API to make your pandas code simpler and more logical.
 
 ## Release date?
