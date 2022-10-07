@@ -161,7 +161,48 @@ def dataframe_to_relation ( self, *column_names ):
 pd.DataFrame.to_relation = dataframe_to_relation
 pd.DataFrame.to_predicate = dataframe_to_relation
 pd.DataFrame.get_relation = dataframe_to_relation
-pd.DataFrame.get_predicate = dataframe_to_relation</code></pre>
+pd.DataFrame.get_predicate = dataframe_to_relation
+
+def dataframe_rows_satisfying ( self, test, efficient=False ):
+    &#34;&#34;&#34;
+    There are two ways to use this function.
+    
+    First, you can call `dataframe_rows_satisfying(df,S)` where `S` is a
+    pandas Series of boolean values, and it will give the same result as
+    `df[S]` would.  Obviously that notation is more concise, while this one is
+    more explicit.
+    
+    Because this function will be installed in the DataFrame class, you can
+    call it as `df.rows_satisfying(S)` or any of the following synonyms:
+    `df.rows_where(S)`, `df.rows_such_that(S)`, `df.rows_in_which(S)`,
+    `df.select(S)`, `df.select_rows(S)`, or `df.subset(S)`.
+
+    Second, you can call `dataframe_rows_satisfying(df,P)` where `P` is any
+    Python function to be used as a predicate on rows.  `P` will be called
+    once for each row, with the row passed as a pandas Series.  The result of
+    the function will be another DataFrame containing only the rows for which
+    `P` returns True.  The same calling synonyms as above apply in this case
+    as well.
+
+    One further difference between this function and `df[S]` is that `df[S]`
+    creates a slice of `df`, leading to the potential of the dreaded &#34;writing
+    to a slice of a DataFrame&#34; error.  This function, by default, creates a
+    copy, because this is often perfectly acceptable, given that most use
+    cases do not involve big data.  You can pass the optional keyword
+    argument `efficient=True` to get a slice instead of a copy.
+    &#34;&#34;&#34;
+    if callable( test ):
+        test = pd.Series( test( row ) for _,row in self.iterrows() )
+    slice = self[test]
+    return slice if efficient else slice.copy()
+
+pd.DataFrame.rows_satisfying = dataframe_rows_satisfying
+pd.DataFrame.rows_such_that = dataframe_rows_satisfying
+pd.DataFrame.rows_in_which = dataframe_rows_satisfying
+pd.DataFrame.rows_where = dataframe_rows_satisfying
+pd.DataFrame.rows_select_rows = dataframe_rows_satisfying
+pd.DataFrame.rows_select = dataframe_rows_satisfying
+pd.DataFrame.rows_subset = dataframe_rows_satisfying</code></pre>
 </details>
 </section>
 <section>
@@ -222,6 +263,75 @@ DataFrame's index, which will be converted to a Series for you.</p>
         output = output.to_series()
     # do the work
     return input.is_a_function( output )</code></pre>
+</details>
+</dd>
+<dt id="clear_data.dataframe_extensions.dataframe_rows_satisfying"><code class="name flex">
+<span>def <span class="ident">dataframe_rows_satisfying</span></span>(<span>self, test, efficient=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>There are two ways to use this function.</p>
+<p>First, you can call <code><a title="clear_data.dataframe_extensions.dataframe_rows_satisfying" href="#clear_data.dataframe_extensions.dataframe_rows_satisfying">dataframe_rows_satisfying()</a>(df,S)</code> where <code>S</code> is a
+pandas Series of boolean values, and it will give the same result as
+<code>df[S]</code> would.
+Obviously that notation is more concise, while this one is
+more explicit.</p>
+<p>Because this function will be installed in the DataFrame class, you can
+call it as <code>df.rows_satisfying(S)</code> or any of the following synonyms:
+<code>df.rows_where(S)</code>, <code>df.rows_such_that(S)</code>, <code>df.rows_in_which(S)</code>,
+<code>df.select(S)</code>, <code>df.select_rows(S)</code>, or <code>df.subset(S)</code>.</p>
+<p>Second, you can call <code><a title="clear_data.dataframe_extensions.dataframe_rows_satisfying" href="#clear_data.dataframe_extensions.dataframe_rows_satisfying">dataframe_rows_satisfying()</a>(df,P)</code> where <code>P</code> is any
+Python function to be used as a predicate on rows.
+<code>P</code> will be called
+once for each row, with the row passed as a pandas Series.
+The result of
+the function will be another DataFrame containing only the rows for which
+<code>P</code> returns True.
+The same calling synonyms as above apply in this case
+as well.</p>
+<p>One further difference between this function and <code>df[S]</code> is that <code>df[S]</code>
+creates a slice of <code>df</code>, leading to the potential of the dreaded "writing
+to a slice of a DataFrame" error.
+This function, by default, creates a
+copy, because this is often perfectly acceptable, given that most use
+cases do not involve big data.
+You can pass the optional keyword
+argument <code>efficient=True</code> to get a slice instead of a copy.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def dataframe_rows_satisfying ( self, test, efficient=False ):
+    &#34;&#34;&#34;
+    There are two ways to use this function.
+    
+    First, you can call `dataframe_rows_satisfying(df,S)` where `S` is a
+    pandas Series of boolean values, and it will give the same result as
+    `df[S]` would.  Obviously that notation is more concise, while this one is
+    more explicit.
+    
+    Because this function will be installed in the DataFrame class, you can
+    call it as `df.rows_satisfying(S)` or any of the following synonyms:
+    `df.rows_where(S)`, `df.rows_such_that(S)`, `df.rows_in_which(S)`,
+    `df.select(S)`, `df.select_rows(S)`, or `df.subset(S)`.
+
+    Second, you can call `dataframe_rows_satisfying(df,P)` where `P` is any
+    Python function to be used as a predicate on rows.  `P` will be called
+    once for each row, with the row passed as a pandas Series.  The result of
+    the function will be another DataFrame containing only the rows for which
+    `P` returns True.  The same calling synonyms as above apply in this case
+    as well.
+
+    One further difference between this function and `df[S]` is that `df[S]`
+    creates a slice of `df`, leading to the potential of the dreaded &#34;writing
+    to a slice of a DataFrame&#34; error.  This function, by default, creates a
+    copy, because this is often perfectly acceptable, given that most use
+    cases do not involve big data.  You can pass the optional keyword
+    argument `efficient=True` to get a slice instead of a copy.
+    &#34;&#34;&#34;
+    if callable( test ):
+        test = pd.Series( test( row ) for _,row in self.iterrows() )
+    slice = self[test]
+    return slice if efficient else slice.copy()</code></pre>
 </details>
 </dd>
 <dt id="clear_data.dataframe_extensions.dataframe_to_dictionary"><code class="name flex">
@@ -412,6 +522,7 @@ names, it assumes that all columns in the DataFrame should be used.</p></div>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
 <li><code><a title="clear_data.dataframe_extensions.dataframe_is_a_function" href="#clear_data.dataframe_extensions.dataframe_is_a_function">dataframe_is_a_function</a></code></li>
+<li><code><a title="clear_data.dataframe_extensions.dataframe_rows_satisfying" href="#clear_data.dataframe_extensions.dataframe_rows_satisfying">dataframe_rows_satisfying</a></code></li>
 <li><code><a title="clear_data.dataframe_extensions.dataframe_to_dictionary" href="#clear_data.dataframe_extensions.dataframe_to_dictionary">dataframe_to_dictionary</a></code></li>
 <li><code><a title="clear_data.dataframe_extensions.dataframe_to_function" href="#clear_data.dataframe_extensions.dataframe_to_function">dataframe_to_function</a></code></li>
 <li><code><a title="clear_data.dataframe_extensions.dataframe_to_relation" href="#clear_data.dataframe_extensions.dataframe_to_relation">dataframe_to_relation</a></code></li>
