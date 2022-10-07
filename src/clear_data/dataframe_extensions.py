@@ -135,3 +135,44 @@ pd.DataFrame.to_relation = dataframe_to_relation
 pd.DataFrame.to_predicate = dataframe_to_relation
 pd.DataFrame.get_relation = dataframe_to_relation
 pd.DataFrame.get_predicate = dataframe_to_relation
+
+def dataframe_rows_satisfying ( self, test, efficient=False ):
+    """
+    There are two ways to use this function.
+    
+    First, you can call `dataframe_rows_satisfying(df,S)` where `S` is a
+    pandas Series of boolean values, and it will give the same result as
+    `df[S]` would.  Obviously that notation is more concise, while this one is
+    more explicit.
+    
+    Because this function will be installed in the DataFrame class, you can
+    call it as `df.rows_satisfying(S)` or any of the following synonyms:
+    `df.rows_where(S)`, `df.rows_such_that(S)`, `df.rows_in_which(S)`,
+    `df.select(S)`, `df.select_rows(S)`, or `df.subset(S)`.
+
+    Second, you can call `dataframe_rows_satisfying(df,P)` where `P` is any
+    Python function to be used as a predicate on rows.  `P` will be called
+    once for each row, with the row passed as a pandas Series.  The result of
+    the function will be another DataFrame containing only the rows for which
+    `P` returns True.  The same calling synonyms as above apply in this case
+    as well.
+
+    One further difference between this function and `df[S]` is that `df[S]`
+    creates a slice of `df`, leading to the potential of the dreaded "writing
+    to a slice of a DataFrame" error.  This function, by default, creates a
+    copy, because this is often perfectly acceptable, given that most use
+    cases do not involve big data.  You can pass the optional keyword
+    argument `efficient=True` to get a slice instead of a copy.
+    """
+    if callable( test ):
+        test = pd.Series( test( row ) for _,row in self.iterrows() )
+    slice = self[test]
+    return slice if efficient else slice.copy()
+
+pd.DataFrame.rows_satisfying = dataframe_rows_satisfying
+pd.DataFrame.rows_such_that = dataframe_rows_satisfying
+pd.DataFrame.rows_in_which = dataframe_rows_satisfying
+pd.DataFrame.rows_where = dataframe_rows_satisfying
+pd.DataFrame.rows_select_rows = dataframe_rows_satisfying
+pd.DataFrame.rows_select = dataframe_rows_satisfying
+pd.DataFrame.rows_subset = dataframe_rows_satisfying

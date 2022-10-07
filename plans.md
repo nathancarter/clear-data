@@ -14,18 +14,6 @@ formats, including XLS[X], CSV, TSV, JSON, HTML, DB?, GRAPHML?
  * `DataFrame.save("filename")` uses the extension and does something
    smart, with output about what it did.
 
-# Filtering
-
-In all of these, there is an optional `kwarg` that is `efficient=False`,
-meaning to make a copy of the DataFrame, not a slice, to avoid the most
-annoying error in all of data science.  You can override it with
-`efficient=True` to get a slice.  It would also be good to enable a change
-to the global default.
-
- * `DataFrame.rows_satisfying(bool_series)` with synonyms:
-    * `rows_such_that`, `rows_where`, `rows_in_which`, `select`,
-      `select_rows`, `filter`, `filter_rows`, `subset`
-
 # Visualization
 
  * `Series.plot_distribution()` will make an intelligent guess about the
