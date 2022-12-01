@@ -1,4 +1,11 @@
 
+# Easy way to create some tiny example DataFrames
+
+ * A DataFrame of size nxm with some whole numbers
+ * A DataFrame of size nxm with random floating point numbers
+ * A chosen number of randonmly generated employees in an example
+   employee DataFrame
+
 # File load/save
 
 Both of the following functions can take extra parameters for specific
@@ -13,6 +20,11 @@ formats, including XLS[X], CSV, TSV, JSON, HTML, DB?, GRAPHML?
    in a clear way if the right path forward can't be easily determined.
  * `DataFrame.save("filename")` uses the extension and does something
    smart, with output about what it did.
+
+# Subsetting
+
+Similar to `df.rows_satisfying(pred)` have `df.index_satisfying(pred)`,
+and all the related synonyms.
 
 # Visualization
 
