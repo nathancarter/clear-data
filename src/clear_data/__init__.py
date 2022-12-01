@@ -19,6 +19,7 @@ how you can use this API to make your pandas code simpler and more logical.
 There is no release yet; this is a brand new, experimental project.
 """
 
+import clear_data.pandas_extensions
 import clear_data.series_extensions
 import clear_data.dataframe_extensions
 from clear_data.finite_function import FiniteFunction

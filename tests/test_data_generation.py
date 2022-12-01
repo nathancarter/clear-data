@@ -12,41 +12,41 @@ class TestDataGeneration( unittest.TestCase ):
 
     def test_int_case ( self ):
         # Example 1 - 4x6 ints
-        df = pd.DataFrame.example( 4, 6, int )
+        df = pd.example( 4, 6, int )
         self.assertEqual( len( df ), 4 )
         self.assertEqual( len( df.columns ), 6 )
         self.assertTrue( all( dt == np.int64 for dt in df.dtypes ) )
         # Example 2 - 20x10 ints
-        df = pd.DataFrame.example( 20, 10, int )
+        df = pd.example( 20, 10, int )
         self.assertEqual( len( df ), 20 )
         self.assertEqual( len( df.columns ), 10 )
         self.assertTrue( all( dt == np.int64 for dt in df.dtypes ) )
         # Example 3 - should work with default #rows/cols
-        df = pd.DataFrame.example( type=int )
+        df = pd.example( type=int )
         self.assertGreater( len( df ), 0 )
         self.assertGreater( len( df.columns ), 0 )
         self.assertTrue( all( dt == np.int64 for dt in df.dtypes ) )
 
     def test_float_case ( self ):
         # Example 1 - 9x5 floats
-        df = pd.DataFrame.example( 9, 5, float )
+        df = pd.example( 9, 5, float )
         self.assertEqual( len( df ), 9 )
         self.assertEqual( len( df.columns ), 5 )
         self.assertTrue( all( dt == np.float64 for dt in df.dtypes ) )
         # Example 2 - 30x12 floats
-        df = pd.DataFrame.example( 30, 12, float )
+        df = pd.example( 30, 12, float )
         self.assertEqual( len( df ), 30 )
         self.assertEqual( len( df.columns ), 12 )
         self.assertTrue( all( dt == np.float64 for dt in df.dtypes ) )
         # Example 3 - should work with default #rows/cols
-        df = pd.DataFrame.example( type=float )
+        df = pd.example( type=float )
         self.assertGreater( len( df ), 0 )
         self.assertGreater( len( df.columns ), 0 )
         self.assertTrue( all( dt == np.float64 for dt in df.dtypes ) )
 
     def test_employee_case ( self ):
         # Example 1 - default
-        df = pd.DataFrame.example()
+        df = pd.example()
         self.assertGreater( len( df ), 0 )
         self.assertEqual( len( df.columns ), 6 )
         self.assertTrue( 'LastName' in df.columns )
@@ -62,7 +62,7 @@ class TestDataGeneration( unittest.TestCase ):
         self.assertTrue( 'YearsAtCompany' in df.columns )
         self.assertTrue( df.dtypes['YearsAtCompany'] == np.int64 )
         # Example 2 - default type, fewer rows
-        df = pd.DataFrame.example( 3 )
+        df = pd.example( 3 )
         self.assertEqual( len( df ), 3 )
         self.assertEqual( len( df.columns ), 6 )
         self.assertTrue( 'LastName' in df.columns )
@@ -78,7 +78,7 @@ class TestDataGeneration( unittest.TestCase ):
         self.assertTrue( 'YearsAtCompany' in df.columns )
         self.assertTrue( df.dtypes['YearsAtCompany'] == np.int64 )
         # Example 3 - explicit #rows, #cols, and type
-        df = pd.DataFrame.example( 10, 9, 'Employee' )
+        df = pd.example( 10, 9, 'Employee' )
         self.assertEqual( len( df ), 10 )
         self.assertEqual( len( df.columns ), 9 )
         self.assertTrue( 'LastName' in df.columns )
