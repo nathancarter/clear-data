@@ -25,7 +25,6 @@ def temp_filename ( extension ):
     return os.path.join( this_dir, f'temp_save_file.{extension}' )
 # Finally, what are all the existing temp files?
 def existing_temp_files ():
-    print( this_dir, os.listdir( this_dir ) )
     return [
         os.path.join( this_dir, filename )
         for filename in os.listdir( this_dir )
