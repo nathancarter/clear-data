@@ -28,7 +28,7 @@ class FiniteFunction:
         if not isinstance( inputs, pd.Series ):
             inputs = pd.Series( inputs ) # defaults to range index -- good
         if not isinstance( outputs, pd.Series ):
-            outputs = pd.Series( outputs ) # default to range index -- good
+            outputs = pd.Series( outputs ) # defaults to range index -- good
         if not inputs.is_a_function( outputs ):
             raise ValueError( 'Inputs and outpus do not form a function' )
         self._inputs = inputs
