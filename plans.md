@@ -1,9 +1,10 @@
 
 # File load/save
 
-Both of the following functions can take extra parameters for specific
-actions/details, such as a sheet name in Excel.  Should support many
-formats, including XLS[X], CSV, TSV, JSON, HTML, DB?, GRAPHML?
+Work has begun on the following functions, but is not complete.  The intent is
+that they can take extra parameters for specific actions/details, such as a
+sheet name in Excel.  Already-implemented formats are not listed below; formats
+yet to implement are listed as to-dos.
 
  * `pd.load("file or URL")` that is smart enough to handle a wide variety
    of file types and gives nice reports/explanations if something went
@@ -11,6 +12,21 @@ formats, including XLS[X], CSV, TSV, JSON, HTML, DB?, GRAPHML?
    the file to figure out what `X` should be, together with appropriate
    parameters specific to the file type, or explaining troubles to the user
    in a clear way if the right path forward can't be easily determined.
+    * File types (do these first before supporting URLs):
+      * XLS\[X] uses `read_excel()` and `to_excel()` and the `.xlsx` extension
+      * Parquet uses `read_parquet()` and `to_parquet()` and `.parquet`
+      * Pickle uses `read_pickle()` and `to_pickle()` and `.pkl`
+      * HDF (with key) uses `read_hdf()` and `to_hdf()` and `.hdf`, but needs an
+        extra "key" argument because an HDF file can contain many objects
+      * STATA uses `read_stata()` and `to_stata()` and the `.dta` extension
+      * ORC uses `read_orc()` and `to_orc()` and the `.orc` extension
+      * JSON uses `read_json()` and `to_json()` and the `.json` extension; may
+        need to use `pd.json_normalize()`.
+      * HTML uses `read_html()` (which produces a list of DataFrames) and
+        `to_html()` produces HTML table code; use the `.html` extension
+    * Should also add support for URLs.
+    * Might be able to add GraphML support for both edge lists and adjacency
+      matrices.
  * `DataFrame.save("filename")` uses the extension and does something
    smart, with output about what it did.
 

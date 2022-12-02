@@ -22,4 +22,5 @@ There is no release yet; this is a brand new, experimental project.
 import clear_data.pandas_extensions
 import clear_data.series_extensions
 import clear_data.dataframe_extensions
+import clear_data.file_tools
 from clear_data.finite_function import FiniteFunction
