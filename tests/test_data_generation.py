@@ -96,5 +96,11 @@ class TestDataGeneration( unittest.TestCase ):
         self.assertTrue( all( dt == np.float64
             for dt in df.dtypes[df.columns[6:]] ) )
 
+    def test_bad_type ( self ):
+        with self.assertRaises( TypeError ):
+            pd.example( 5, 5, str )
+        with self.assertRaises( TypeError ):
+            pd.example( 15, 15, 'Something other than Employee' )
+
 if __name__ == '__main__':
     unittest.main()

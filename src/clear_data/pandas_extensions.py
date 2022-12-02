@@ -72,6 +72,6 @@ def random_dataframe ( num_rows = 20, num_cols = 5, type = 'Employee' ):
             result[f'feature{len( result.columns )-5}'] = \
                 np.random.normal( 50, 25, num_rows )
         return result
-    raise ValueError( f'Cannot generate example DataFrame of "{str(type)}"')
+    raise TypeError( f'Cannot generate example DataFrame of "{str(type)}"')
 
 pd.example = random_dataframe
