@@ -68,6 +68,56 @@ class TestLoadSave( unittest.TestCase ):
         # The above tests just compare the First/Last name columns, because they
         # are text and will import/export reliably as text.
 
+    def test_read_write_tsv ( self ):
+        df = pd.example()
+        # Save it and ensure that it got saved
+        filename = temp_filename( 'tsv' )
+        self.assertFalse( file_exists( filename ) )
+        df.save( filename )
+        self.assertTrue( file_exists( filename ) )
+        # Reload it and ensure that it's similar
+        # (though it won't be the same because CSV is limited)
+        similar_df = pd.load( filename )
+        self.assertEqual( df.index.tolist(), similar_df.index.tolist() )
+        self.assertEqual( df.columns.tolist(), similar_df.columns.tolist() )
+        self.assertEqual( df[df.columns[0]].tolist(),
+                          similar_df[similar_df.columns[0]].tolist() )
+        self.assertEqual( df[df.columns[1]].tolist(),
+                          similar_df[similar_df.columns[1]].tolist() )
+        # The above tests just compare the First/Last name columns, because they
+        # are text and will import/export reliably as text.
+
+    def test_read_write_xls ( self ):
+        df = pd.example()
+        # Save it and ensure that it got saved
+        filename = temp_filename( 'xls' )
+        self.assertFalse( file_exists( filename ) )
+        # Can't save these without a deprecated module that's not in this repo
+        with self.assertRaises( ImportError ):
+            df.save( filename )
+        # Can't load for the same reason (regardless of whether the file exists)
+        with self.assertRaises( ImportError ):
+            pd.load( filename )
+
+    def test_read_write_xlsx ( self ):
+        df = pd.example()
+        # Save it and ensure that it got saved
+        filename = temp_filename( 'xlsx' )
+        self.assertFalse( file_exists( filename ) )
+        df.save( filename )
+        self.assertTrue( file_exists( filename ) )
+        # Reload it and ensure that it's similar
+        # (though it won't be the same because CSV is limited)
+        similar_df = pd.load( filename )
+        self.assertEqual( df.index.tolist(), similar_df.index.tolist() )
+        self.assertEqual( df.columns.tolist(), similar_df.columns.tolist() )
+        self.assertEqual( df[df.columns[0]].tolist(),
+                          similar_df[similar_df.columns[0]].tolist() )
+        self.assertEqual( df[df.columns[1]].tolist(),
+                          similar_df[similar_df.columns[1]].tolist() )
+        # The above tests just compare the First/Last name columns, because they
+        # are text and will import/export reliably as text.
+
     def test_unsupported_extensions ( self ):
         # Loading
         with self.assertRaisesRegex( ValueError, 'Unsupported.*extension' ):
