@@ -1,1 +1,3 @@
 pdoc3
+pyarrow
+fastparquet

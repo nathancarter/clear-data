@@ -13,7 +13,6 @@ yet to implement are listed as to-dos.
    parameters specific to the file type, or explaining troubles to the user
    in a clear way if the right path forward can't be easily determined.
     * File types (do these first before supporting URLs):
-      * Parquet uses `read_parquet()` and `to_parquet()` and `.parquet`
       * Pickle uses `read_pickle()` and `to_pickle()` and `.pkl`
       * HDF (with key) uses `read_hdf()` and `to_hdf()` and `.hdf`, but needs an
         extra "key" argument because an HDF file can contain many objects

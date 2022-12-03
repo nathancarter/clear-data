@@ -118,6 +118,23 @@ class TestLoadSave( unittest.TestCase ):
         # The above tests just compare the First/Last name columns, because they
         # are text and will import/export reliably as text.
 
+    def test_read_write_parquet ( self ):
+        df = pd.example()
+        # Save it and ensure that it got saved
+        filename = temp_filename( 'parquet' )
+        self.assertFalse( file_exists( filename ) )
+        df.save( filename )
+        self.assertTrue( file_exists( filename ) )
+        # Reload it and ensure that it's the same (because parquet is robust)
+        reloaded_df = pd.load( filename )
+        self.assertEqual( df.index.tolist(), reloaded_df.index.tolist() )
+        self.assertEqual( df.columns.tolist(), reloaded_df.columns.tolist() )
+        for column_name in df.columns:
+            self.assertEqual( df.dtypes[column_name],
+                              reloaded_df.dtypes[column_name] )
+            self.assertEqual( df[column_name].tolist(),
+                              reloaded_df[column_name].tolist() )
+
     def test_unsupported_extensions ( self ):
         # Loading
         with self.assertRaisesRegex( ValueError, 'Unsupported.*extension' ):

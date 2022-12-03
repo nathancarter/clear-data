@@ -20,6 +20,8 @@ def load_any_file ( filename, *args, **kwargs ):
             df = pd.read_csv( filename, sep='\t', *args, **kwargs )
         case 'xls' | 'xlsx':
             df = pd.read_excel( filename, *args, **kwargs )
+        case 'parquet':
+            df = pd.read_parquet( filename, *args, **kwargs )
         case _:
             raise ValueError( f'Unsupported file extension: {extension}' )
     # In many cases, the index may have been pushed into the first column of
@@ -51,6 +53,8 @@ def save_any_dataframe ( self, filename, *args, **kwargs ):
             self.to_csv( filename, sep='\t', *args, **kwargs )
         case 'xls' | 'xlsx':
             self.to_excel( filename, *args, **kwargs )
+        case 'parquet':
+            self.to_parquet( filename, *args, **kwargs )
         case _:
             raise ValueError( f'Unsupported file extension: {extension}' )
 
