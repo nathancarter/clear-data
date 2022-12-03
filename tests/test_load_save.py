@@ -135,6 +135,37 @@ class TestLoadSave( unittest.TestCase ):
             self.assertEqual( df[column_name].tolist(),
                               reloaded_df[column_name].tolist() )
 
+    def test_read_write_pickle ( self ):
+        df = pd.example()
+        # Save it and ensure that it got saved
+        filename = temp_filename( 'pickle' )
+        self.assertFalse( file_exists( filename ) )
+        df.save( filename )
+        self.assertTrue( file_exists( filename ) )
+        # Reload it and ensure that it's the same (because pickle is robust)
+        reloaded_df = pd.load( filename )
+        self.assertEqual( df.index.tolist(), reloaded_df.index.tolist() )
+        self.assertEqual( df.columns.tolist(), reloaded_df.columns.tolist() )
+        for column_name in df.columns:
+            self.assertEqual( df.dtypes[column_name],
+                              reloaded_df.dtypes[column_name] )
+            self.assertEqual( df[column_name].tolist(),
+                              reloaded_df[column_name].tolist() )
+        # Repeat above test with alternate file extension
+        filename = temp_filename( 'pkl' )
+        self.assertFalse( file_exists( filename ) )
+        df.save( filename )
+        self.assertTrue( file_exists( filename ) )
+        # Reload it and ensure that it's the same (because pickle is robust)
+        reloaded_df = pd.load( filename )
+        self.assertEqual( df.index.tolist(), reloaded_df.index.tolist() )
+        self.assertEqual( df.columns.tolist(), reloaded_df.columns.tolist() )
+        for column_name in df.columns:
+            self.assertEqual( df.dtypes[column_name],
+                              reloaded_df.dtypes[column_name] )
+            self.assertEqual( df[column_name].tolist(),
+                              reloaded_df[column_name].tolist() )
+
     def test_unsupported_extensions ( self ):
         # Loading
         with self.assertRaisesRegex( ValueError, 'Unsupported.*extension' ):

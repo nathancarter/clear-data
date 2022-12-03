@@ -17,11 +17,15 @@ def load_any_file ( filename, *args, **kwargs ):
         case 'csv':
             df = pd.read_csv( filename, *args, **kwargs )
         case 'tsv':
-            df = pd.read_csv( filename, sep='\t', *args, **kwargs )
+            if 'sep' not in kwargs:
+                kwargs['sep'] = '\t'
+            df = pd.read_csv( filename, *args, **kwargs )
         case 'xls' | 'xlsx':
             df = pd.read_excel( filename, *args, **kwargs )
         case 'parquet':
             df = pd.read_parquet( filename, *args, **kwargs )
+        case 'pickle' | 'pkl':
+            df = pd.read_pickle( filename, *args, **kwargs )
         case _:
             raise ValueError( f'Unsupported file extension: {extension}' )
     # In many cases, the index may have been pushed into the first column of
@@ -50,11 +54,15 @@ def save_any_dataframe ( self, filename, *args, **kwargs ):
         case 'csv':
             self.to_csv( filename, *args, **kwargs )
         case 'tsv':
-            self.to_csv( filename, sep='\t', *args, **kwargs )
+            if 'sep' not in kwargs:
+                kwargs['sep'] = '\t'
+            self.to_csv( filename, *args, **kwargs )
         case 'xls' | 'xlsx':
             self.to_excel( filename, *args, **kwargs )
         case 'parquet':
             self.to_parquet( filename, *args, **kwargs )
+        case 'pickle' | 'pkl':
+            self.to_pickle( filename, *args, **kwargs )
         case _:
             raise ValueError( f'Unsupported file extension: {extension}' )
 
