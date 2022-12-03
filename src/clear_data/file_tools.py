@@ -30,12 +30,14 @@ def load_any_file ( filename, *args, **kwargs ):
             if 'key' not in kwargs:
                 kwargs['key'] = 'default'
             df = pd.read_hdf( filename, *args, **kwargs )
+        case 'dta':
+            df = pd.read_stata( filename, *args, **kwargs )
         case _:
             raise ValueError( f'Unsupported file extension: {extension}' )
     # In many cases, the index may have been pushed into the first column of
     # the storage format.  A heuristic to reverse that is to check to see if the
     # first column could function as an index, and if so, use it as one:
-    if extension in [ 'csv', 'tsv', 'xls', 'xlsx' ] and \
+    if extension in [ 'csv', 'tsv', 'xls', 'xlsx', 'dta' ] and \
             not any( df.index.duplicated() ):
         df.set_index( df.columns[0], inplace=True )
     # Done, so return the result:
@@ -71,6 +73,8 @@ def save_any_dataframe ( self, filename, *args, **kwargs ):
             if 'key' not in kwargs:
                 kwargs['key'] = 'default'
             self.to_hdf( filename, *args, **kwargs )
+        case 'dta':
+            self.to_stata( filename, *args, **kwargs )
         case _:
             raise ValueError( f'Unsupported file extension: {extension}' )
 

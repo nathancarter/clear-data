@@ -209,6 +209,29 @@ class TestLoadSave( unittest.TestCase ):
             self.assertEqual( int_df[column_name].tolist(),
                               reloaded_int_df[column_name].tolist() )
 
+    def test_read_write_dta ( self ):
+        df = pd.example()
+        # Save it and ensure that it got saved
+        filename = temp_filename( 'dta' )
+        self.assertFalse( file_exists( filename ) )
+        df.save( filename )
+        self.assertTrue( file_exists( filename ) )
+        # Reload it and ensure that it's the same (because STATA dta is decent)
+        similar_df = pd.load( filename )
+        self.assertEqual( df.index.tolist(), similar_df.index.tolist() )
+        self.assertEqual( df.columns.tolist(), similar_df.columns.tolist() )
+        for column_name in df.columns:
+            similar_int_types = [ np.int32, np.int64 ]
+            self.assertTrue(
+                df.dtypes[column_name] == similar_df.dtypes[column_name] or
+                (
+                    df.dtypes[column_name] in similar_int_types and
+                    similar_df.dtypes[column_name] in similar_int_types
+                )
+            )
+            self.assertEqual( df[column_name].tolist(),
+                              similar_df[column_name].tolist() )
+
     def test_unsupported_extensions ( self ):
         # Loading
         with self.assertRaisesRegex( ValueError, 'Unsupported.*extension' ):

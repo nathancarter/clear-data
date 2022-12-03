@@ -13,7 +13,6 @@ yet to implement are listed as to-dos.
    parameters specific to the file type, or explaining troubles to the user
    in a clear way if the right path forward can't be easily determined.
     * File types (do these first before supporting URLs):
-      * STATA uses `read_stata()` and `to_stata()` and the `.dta` extension
       * ORC uses `read_orc()` and `to_orc()` and the `.orc` extension
       * JSON uses `read_json()` and `to_json()` and the `.json` extension; may
         need to use `pd.json_normalize()`.
