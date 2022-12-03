@@ -32,6 +32,8 @@ def load_any_file ( filename, *args, **kwargs ):
             df = pd.read_hdf( filename, *args, **kwargs )
         case 'dta':
             df = pd.read_stata( filename, *args, **kwargs )
+        case 'orc':
+            df = pd.read_orc( filename, *args, **kwargs )
         case _:
             raise ValueError( f'Unsupported file extension: {extension}' )
     # In many cases, the index may have been pushed into the first column of
@@ -75,6 +77,8 @@ def save_any_dataframe ( self, filename, *args, **kwargs ):
             self.to_hdf( filename, *args, **kwargs )
         case 'dta':
             self.to_stata( filename, *args, **kwargs )
+        case 'orc':
+            self.to_orc( filename, *args, **kwargs )
         case _:
             raise ValueError( f'Unsupported file extension: {extension}' )
 
