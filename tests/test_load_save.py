@@ -156,7 +156,6 @@ class TestLoadSave( unittest.TestCase ):
         self.assertFalse( file_exists( filename ) )
         df.save( filename )
         self.assertTrue( file_exists( filename ) )
-        # Reload it and ensure that it's the same (because pickle is robust)
         reloaded_df = pd.load( filename )
         self.assertEqual( df.index.tolist(), reloaded_df.index.tolist() )
         self.assertEqual( df.columns.tolist(), reloaded_df.columns.tolist() )
@@ -165,6 +164,50 @@ class TestLoadSave( unittest.TestCase ):
                               reloaded_df.dtypes[column_name] )
             self.assertEqual( df[column_name].tolist(),
                               reloaded_df[column_name].tolist() )
+
+    def test_read_write_hdf ( self ):
+        df = pd.example()
+        # Save it and ensure that it got saved
+        filename = temp_filename( 'hdf' )
+        self.assertFalse( file_exists( filename ) )
+        df.save( filename )
+        self.assertTrue( file_exists( filename ) )
+        # Reload it and ensure that it's the same (because HDF is robust)
+        reloaded_df = pd.load( filename )
+        self.assertEqual( df.index.tolist(), reloaded_df.index.tolist() )
+        self.assertEqual( df.columns.tolist(), reloaded_df.columns.tolist() )
+        for column_name in df.columns:
+            self.assertEqual( df.dtypes[column_name],
+                              reloaded_df.dtypes[column_name] )
+            self.assertEqual( df[column_name].tolist(),
+                              reloaded_df[column_name].tolist() )
+
+    def test_read_write_hdf_multiple ( self ):
+        df = pd.example()
+        int_df = pd.example( 10, 10, int )
+        # Repeat above test, this time using a specific file key...
+        # ...two, in fact, to be sure we can put more than 1 thing in the file.
+        filename = temp_filename( 'hdf' )
+        self.assertFalse( file_exists( filename ) )
+        df.save( filename, key='employees' )
+        int_df.save( filename, key='integers' )
+        self.assertTrue( file_exists( filename ) )
+        reloaded_df = pd.load( filename, key='employees' )
+        self.assertEqual( df.index.tolist(), reloaded_df.index.tolist() )
+        self.assertEqual( df.columns.tolist(), reloaded_df.columns.tolist() )
+        for column_name in df.columns:
+            self.assertEqual( df.dtypes[column_name],
+                              reloaded_df.dtypes[column_name] )
+            self.assertEqual( df[column_name].tolist(),
+                              reloaded_df[column_name].tolist() )
+        reloaded_int_df = pd.load( filename, key='integers' )
+        self.assertEqual( int_df.index.tolist(), reloaded_int_df.index.tolist() )
+        self.assertEqual( int_df.columns.tolist(), reloaded_int_df.columns.tolist() )
+        for column_name in int_df.columns:
+            self.assertEqual( int_df.dtypes[column_name],
+                              reloaded_int_df.dtypes[column_name] )
+            self.assertEqual( int_df[column_name].tolist(),
+                              reloaded_int_df[column_name].tolist() )
 
     def test_unsupported_extensions ( self ):
         # Loading

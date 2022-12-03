@@ -26,6 +26,10 @@ def load_any_file ( filename, *args, **kwargs ):
             df = pd.read_parquet( filename, *args, **kwargs )
         case 'pickle' | 'pkl':
             df = pd.read_pickle( filename, *args, **kwargs )
+        case 'hdf':
+            if 'key' not in kwargs:
+                kwargs['key'] = 'default'
+            df = pd.read_hdf( filename, *args, **kwargs )
         case _:
             raise ValueError( f'Unsupported file extension: {extension}' )
     # In many cases, the index may have been pushed into the first column of
@@ -63,6 +67,10 @@ def save_any_dataframe ( self, filename, *args, **kwargs ):
             self.to_parquet( filename, *args, **kwargs )
         case 'pickle' | 'pkl':
             self.to_pickle( filename, *args, **kwargs )
+        case 'hdf':
+            if 'key' not in kwargs:
+                kwargs['key'] = 'default'
+            self.to_hdf( filename, *args, **kwargs )
         case _:
             raise ValueError( f'Unsupported file extension: {extension}' )
 
