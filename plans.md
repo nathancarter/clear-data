@@ -13,8 +13,6 @@ yet to implement are listed as to-dos.
    parameters specific to the file type, or explaining troubles to the user
    in a clear way if the right path forward can't be easily determined.
     * File types (do these first before supporting URLs):
-      * JSON uses `read_json()` and `to_json()` and the `.json` extension; may
-        need to use `pd.json_normalize()`.
       * HTML uses `read_html()` (which produces a list of DataFrames) and
         `to_html()` produces HTML table code; use the `.html` extension
     * Should also add support for URLs.

@@ -32,11 +32,60 @@ def existing_temp_files ():
     ]
 
 
+
 #
 # And now the actual unit tests:
 #
 
 class TestLoadSave( unittest.TestCase ):
+
+    #
+    # Test dataframe for loading/saving, and simple comparison utilities
+    #
+    test_df = pd.example() # employees, 20 rows, 6 cols
+
+    def assert_same ( self, other_df, compare_to = None ):
+        if compare_to is None:
+            compare_to = TestLoadSave.test_df.copy()
+        # is other_df exactly like test_df()?
+        self.assertEqual( compare_to.index.tolist(), other_df.index.tolist() )
+        self.assertEqual( compare_to.columns.tolist(), other_df.columns.tolist() )
+        for column_name in compare_to.columns:
+            self.assertEqual( compare_to.dtypes[column_name],
+                              other_df.dtypes[column_name] )
+            self.assertEqual( compare_to[column_name].tolist(),
+                              other_df[column_name].tolist() )
+
+    def assert_same_except_int_dtypes ( self, other_df, compare_to = None ):
+        if compare_to is None:
+            compare_to = TestLoadSave.test_df.copy()
+        # is other_df the same as test_df() except maybe for int32 vs. int64?
+        self.assertEqual( compare_to.index.tolist(), other_df.index.tolist() )
+        self.assertEqual( compare_to.columns.tolist(), other_df.columns.tolist() )
+        for column_name in compare_to.columns:
+            similar_int_types = [ np.int32, np.int64 ]
+            self.assertTrue(
+                compare_to.dtypes[column_name] == other_df.dtypes[column_name] or
+                (
+                    compare_to.dtypes[column_name] in similar_int_types and
+                    other_df.dtypes[column_name] in similar_int_types
+                )
+            )
+            self.assertEqual( compare_to[column_name].tolist(),
+                              other_df[column_name].tolist() )
+
+    def assert_same_except_dtypes ( self, other_df, compare_to = None ):
+        if compare_to is None:
+            compare_to = TestLoadSave.test_df.copy()
+        # is other_df the same as test_df() except maybe for column dtypes?
+        # (e.g., a column of string IDs got converted to integers)
+        self.assertEqual( compare_to.index.tolist(), other_df.index.tolist() )
+        self.assertEqual( compare_to.columns.tolist(), other_df.columns.tolist() )
+        for column_name in compare_to.columns:
+            self.assertEqual(
+                [ str(x) for x in compare_to[column_name] ],
+                [ str(x) for x in other_df[column_name] ]
+            )
 
     def setUp ( self ):
         # In case any test created any files in the past, we clear them out
@@ -50,7 +99,7 @@ class TestLoadSave( unittest.TestCase ):
         self.setUp()
 
     def test_read_write_csv ( self ):
-        df = pd.example()
+        df = TestLoadSave.test_df.copy()
         # Save it and ensure that it got saved
         filename = temp_filename( 'csv' )
         self.assertFalse( file_exists( filename ) )
@@ -58,37 +107,21 @@ class TestLoadSave( unittest.TestCase ):
         self.assertTrue( file_exists( filename ) )
         # Reload it and ensure that it's similar
         # (though it won't be the same because CSV is limited)
-        similar_df = pd.load( filename )
-        self.assertEqual( df.index.tolist(), similar_df.index.tolist() )
-        self.assertEqual( df.columns.tolist(), similar_df.columns.tolist() )
-        self.assertEqual( df[df.columns[0]].tolist(),
-                          similar_df[similar_df.columns[0]].tolist() )
-        self.assertEqual( df[df.columns[1]].tolist(),
-                          similar_df[similar_df.columns[1]].tolist() )
-        # The above tests just compare the First/Last name columns, because they
-        # are text and will import/export reliably as text.
+        self.assert_same_except_dtypes( pd.load( filename ) )
 
     def test_read_write_tsv ( self ):
-        df = pd.example()
+        df = TestLoadSave.test_df.copy()
         # Save it and ensure that it got saved
         filename = temp_filename( 'tsv' )
         self.assertFalse( file_exists( filename ) )
         df.save( filename )
         self.assertTrue( file_exists( filename ) )
         # Reload it and ensure that it's similar
-        # (though it won't be the same because CSV is limited)
-        similar_df = pd.load( filename )
-        self.assertEqual( df.index.tolist(), similar_df.index.tolist() )
-        self.assertEqual( df.columns.tolist(), similar_df.columns.tolist() )
-        self.assertEqual( df[df.columns[0]].tolist(),
-                          similar_df[similar_df.columns[0]].tolist() )
-        self.assertEqual( df[df.columns[1]].tolist(),
-                          similar_df[similar_df.columns[1]].tolist() )
-        # The above tests just compare the First/Last name columns, because they
-        # are text and will import/export reliably as text.
+        # (though it won't be the same because TSV is limited)
+        self.assert_same_except_dtypes( pd.load( filename ) )
 
     def test_read_write_xls ( self ):
-        df = pd.example()
+        df = TestLoadSave.test_df.copy()
         # Save it and ensure that it got saved
         filename = temp_filename( 'xls' )
         self.assertFalse( file_exists( filename ) )
@@ -100,90 +133,54 @@ class TestLoadSave( unittest.TestCase ):
             pd.load( filename )
 
     def test_read_write_xlsx ( self ):
-        df = pd.example()
+        df = TestLoadSave.test_df.copy()
         # Save it and ensure that it got saved
         filename = temp_filename( 'xlsx' )
         self.assertFalse( file_exists( filename ) )
         df.save( filename )
         self.assertTrue( file_exists( filename ) )
         # Reload it and ensure that it's similar
-        # (though it won't be the same because CSV is limited)
-        similar_df = pd.load( filename )
-        self.assertEqual( df.index.tolist(), similar_df.index.tolist() )
-        self.assertEqual( df.columns.tolist(), similar_df.columns.tolist() )
-        self.assertEqual( df[df.columns[0]].tolist(),
-                          similar_df[similar_df.columns[0]].tolist() )
-        self.assertEqual( df[df.columns[1]].tolist(),
-                          similar_df[similar_df.columns[1]].tolist() )
-        # The above tests just compare the First/Last name columns, because they
-        # are text and will import/export reliably as text.
+        # (though it won't be the same because XLSX is limited)
+        self.assert_same_except_dtypes( pd.load( filename ) )
 
     def test_read_write_parquet ( self ):
-        df = pd.example()
+        df = TestLoadSave.test_df.copy()
         # Save it and ensure that it got saved
         filename = temp_filename( 'parquet' )
         self.assertFalse( file_exists( filename ) )
         df.save( filename )
         self.assertTrue( file_exists( filename ) )
         # Reload it and ensure that it's the same (because parquet is robust)
-        reloaded_df = pd.load( filename )
-        self.assertEqual( df.index.tolist(), reloaded_df.index.tolist() )
-        self.assertEqual( df.columns.tolist(), reloaded_df.columns.tolist() )
-        for column_name in df.columns:
-            self.assertEqual( df.dtypes[column_name],
-                              reloaded_df.dtypes[column_name] )
-            self.assertEqual( df[column_name].tolist(),
-                              reloaded_df[column_name].tolist() )
+        self.assert_same( pd.load( filename ) )
 
     def test_read_write_pickle ( self ):
-        df = pd.example()
+        df = TestLoadSave.test_df.copy()
         # Save it and ensure that it got saved
         filename = temp_filename( 'pickle' )
         self.assertFalse( file_exists( filename ) )
         df.save( filename )
         self.assertTrue( file_exists( filename ) )
         # Reload it and ensure that it's the same (because pickle is robust)
-        reloaded_df = pd.load( filename )
-        self.assertEqual( df.index.tolist(), reloaded_df.index.tolist() )
-        self.assertEqual( df.columns.tolist(), reloaded_df.columns.tolist() )
-        for column_name in df.columns:
-            self.assertEqual( df.dtypes[column_name],
-                              reloaded_df.dtypes[column_name] )
-            self.assertEqual( df[column_name].tolist(),
-                              reloaded_df[column_name].tolist() )
+        self.assert_same( pd.load( filename ) )
         # Repeat above test with alternate file extension
         filename = temp_filename( 'pkl' )
         self.assertFalse( file_exists( filename ) )
         df.save( filename )
         self.assertTrue( file_exists( filename ) )
-        reloaded_df = pd.load( filename )
-        self.assertEqual( df.index.tolist(), reloaded_df.index.tolist() )
-        self.assertEqual( df.columns.tolist(), reloaded_df.columns.tolist() )
-        for column_name in df.columns:
-            self.assertEqual( df.dtypes[column_name],
-                              reloaded_df.dtypes[column_name] )
-            self.assertEqual( df[column_name].tolist(),
-                              reloaded_df[column_name].tolist() )
+        self.assert_same( pd.load( filename ) )
 
     def test_read_write_hdf ( self ):
-        df = pd.example()
+        df = TestLoadSave.test_df.copy()
         # Save it and ensure that it got saved
         filename = temp_filename( 'hdf' )
         self.assertFalse( file_exists( filename ) )
         df.save( filename )
         self.assertTrue( file_exists( filename ) )
         # Reload it and ensure that it's the same (because HDF is robust)
-        reloaded_df = pd.load( filename )
-        self.assertEqual( df.index.tolist(), reloaded_df.index.tolist() )
-        self.assertEqual( df.columns.tolist(), reloaded_df.columns.tolist() )
-        for column_name in df.columns:
-            self.assertEqual( df.dtypes[column_name],
-                              reloaded_df.dtypes[column_name] )
-            self.assertEqual( df[column_name].tolist(),
-                              reloaded_df[column_name].tolist() )
+        self.assert_same( pd.load( filename ) )
 
     def test_read_write_hdf_multiple ( self ):
-        df = pd.example()
+        df = TestLoadSave.test_df.copy()
         int_df = pd.example( 10, 10, int )
         # Repeat above test, this time using a specific file key...
         # ...two, in fact, to be sure we can put more than 1 thing in the file.
@@ -192,63 +189,52 @@ class TestLoadSave( unittest.TestCase ):
         df.save( filename, key='employees' )
         int_df.save( filename, key='integers' )
         self.assertTrue( file_exists( filename ) )
-        reloaded_df = pd.load( filename, key='employees' )
-        self.assertEqual( df.index.tolist(), reloaded_df.index.tolist() )
-        self.assertEqual( df.columns.tolist(), reloaded_df.columns.tolist() )
-        for column_name in df.columns:
-            self.assertEqual( df.dtypes[column_name],
-                              reloaded_df.dtypes[column_name] )
-            self.assertEqual( df[column_name].tolist(),
-                              reloaded_df[column_name].tolist() )
-        reloaded_int_df = pd.load( filename, key='integers' )
-        self.assertEqual( int_df.index.tolist(), reloaded_int_df.index.tolist() )
-        self.assertEqual( int_df.columns.tolist(), reloaded_int_df.columns.tolist() )
-        for column_name in int_df.columns:
-            self.assertEqual( int_df.dtypes[column_name],
-                              reloaded_int_df.dtypes[column_name] )
-            self.assertEqual( int_df[column_name].tolist(),
-                              reloaded_int_df[column_name].tolist() )
+        self.assert_same( pd.load( filename, key='employees' ) )
+        self.assert_same( pd.load( filename, key='integers' ), int_df )
 
     def test_read_write_dta ( self ):
-        df = pd.example()
+        df = TestLoadSave.test_df.copy()
         # Save it and ensure that it got saved
         filename = temp_filename( 'dta' )
         self.assertFalse( file_exists( filename ) )
         df.save( filename )
         self.assertTrue( file_exists( filename ) )
         # Reload it and ensure that it's the same (because STATA dta is decent)
-        similar_df = pd.load( filename )
-        self.assertEqual( df.index.tolist(), similar_df.index.tolist() )
-        self.assertEqual( df.columns.tolist(), similar_df.columns.tolist() )
-        for column_name in df.columns:
-            similar_int_types = [ np.int32, np.int64 ]
-            self.assertTrue(
-                df.dtypes[column_name] == similar_df.dtypes[column_name] or
-                (
-                    df.dtypes[column_name] in similar_int_types and
-                    similar_df.dtypes[column_name] in similar_int_types
-                )
-            )
-            self.assertEqual( df[column_name].tolist(),
-                              similar_df[column_name].tolist() )
+        self.assert_same_except_int_dtypes( pd.load( filename ) )
 
     def test_read_write_orc ( self ):
-        df = pd.example()
+        df = TestLoadSave.test_df.copy()
         # Save it and ensure that it got saved
         filename = temp_filename( 'orc' )
         self.assertFalse( file_exists( filename ) )
         df.save( filename )
         self.assertTrue( file_exists( filename ) )
         # Reload it and ensure that it's the same (because ORC is robust)
-        reloaded_df = pd.load( filename )
-        self.assertEqual( df.index.tolist(), reloaded_df.index.tolist() )
-        self.assertEqual( df.columns.tolist(), reloaded_df.columns.tolist() )
-        for column_name in df.columns:
-            self.assertEqual( df.dtypes[column_name],
-                              reloaded_df.dtypes[column_name] )
-            self.assertEqual( df[column_name].tolist(),
-                              reloaded_df[column_name].tolist() )
+        self.assert_same( pd.load( filename ) )
 
+    def test_read_write_json ( self ):
+        df = TestLoadSave.test_df.copy()
+        # Save it and ensure that it got saved
+        filename = temp_filename( 'json' )
+        self.assertFalse( file_exists( filename ) )
+        df.save( filename )
+        self.assertTrue( file_exists( filename ) )
+        # Reload it and ensure that it's similar
+        # (though it won't be the same because JSON reloading assumes some types)
+        self.assert_same_except_dtypes( pd.load( filename ) )
+        # Repeat above test with each different way to store as JSON
+        for orient in ['columns','index','values','records','split','table']:
+            delete_file( filename )
+            self.assertFalse( file_exists( filename ) )
+            df.save( filename, orient=orient )
+            self.assertTrue( file_exists( filename ) )
+            reloaded_df = pd.load( filename )
+            # One exception: If we stored only the values (no column names)
+            # then we can't expect those to be reloaded.
+            if orient == 'values':
+                reloaded_df.columns = df.columns
+            self.assert_same_except_dtypes( reloaded_df )
+    
     def test_unsupported_extensions ( self ):
         # Loading
         with self.assertRaisesRegex( ValueError, 'Unsupported.*extension' ):

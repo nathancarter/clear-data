@@ -1,6 +1,7 @@
 
 import pandas as pd
 import importlib
+import json
 
 def load_any_file ( filename, *args, **kwargs ):
     '''
@@ -34,6 +35,54 @@ def load_any_file ( filename, *args, **kwargs ):
             df = pd.read_stata( filename, *args, **kwargs )
         case 'orc':
             df = pd.read_orc( filename, *args, **kwargs )
+        case 'json':
+            if 'orient' not in kwargs:
+                # detect orientation from JSON structure when possible
+                with open( filename ) as f:
+                    json_obj = json.load( f )
+                if type( json_obj ) == list:
+                    if all( type( inner ) == list for inner in json_obj ):
+                        orient = 'values'
+                    elif all( type( inner ) == dict for inner in json_obj ):
+                        orient = 'records'
+                    else:
+                        raise ValueError( 'JSON does not have a table structure' )
+                elif type( json_obj ) == dict:
+                    if (
+                        'columns' in json_obj and
+                        'index' in json_obj and
+                        'data' in json_obj and
+                        type( json_obj['columns'] ) == list and
+                        type( json_obj['index'] ) == list and
+                        type( json_obj['data'] ) == list
+                    ):
+                        orient = 'split'
+                    elif (
+                        'schema' in json_obj and
+                        'data' in json_obj and
+                        type( json_obj['schema'] ) == dict and
+                        type( json_obj['data'] ) == list
+                    ):
+                        orient = 'table'
+                    else:
+                        keys = list( json_obj.keys() )
+                        if all( type( json_obj[key] ) == dict for key in keys ):
+                            num_keys = len( keys )
+                            num_inner_keys = len( json_obj[keys[0]].keys() )
+                            if num_keys > num_inner_keys:
+                                # heuristic: guess outer keys are the rows
+                                orient = 'index'
+                            else:
+                                # other way around, inner keys are the rows
+                                orient = 'columns'
+                        else:
+                            raise ValueError( 'JSON does not have a table structure' )
+                else:
+                    raise ValueError( 'JSON does not have a table structure' )
+            if orient == 'records':
+                df = pd.json_normalize( json_obj ) # must ignore args and kwargs
+            else:
+                df = pd.read_json( filename, orient=orient, *args, **kwargs )
         case _:
             raise ValueError( f'Unsupported file extension: {extension}' )
     # In many cases, the index may have been pushed into the first column of
@@ -79,6 +128,10 @@ def save_any_dataframe ( self, filename, *args, **kwargs ):
             self.to_stata( filename, *args, **kwargs )
         case 'orc':
             self.to_orc( filename, *args, **kwargs )
+        case 'json':
+            if 'orient' not in kwargs:
+                kwargs['orient'] = 'split'
+            self.to_json( filename, *args, **kwargs )
         case _:
             raise ValueError( f'Unsupported file extension: {extension}' )
 
