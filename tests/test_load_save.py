@@ -32,7 +32,6 @@ def existing_temp_files ():
     ]
 
 
-
 #
 # And now the actual unit tests:
 #
