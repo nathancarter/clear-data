@@ -235,6 +235,16 @@ class TestLoadSave( unittest.TestCase ):
                 reloaded_df.columns = df.columns
             self.assert_same_except_dtypes( reloaded_df )
     
+    def test_read_write_html ( self ):
+        df = TestLoadSave.test_df.copy()
+        # Save it and ensure that it got saved
+        filename = temp_filename( 'html' )
+        self.assertFalse( file_exists( filename ) )
+        df.save( filename )
+        self.assertTrue( file_exists( filename ) )
+        # Reload it and ensure that it's the same (because ORC is robust)
+        self.assert_same_except_dtypes( pd.load( filename ) )
+
     def test_unsupported_extensions ( self ):
         # Loading
         with self.assertRaisesRegex( ValueError, 'Unsupported.*extension' ):

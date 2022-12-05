@@ -83,12 +83,23 @@ def load_any_file ( filename, *args, **kwargs ):
                 df = pd.json_normalize( json_obj ) # must ignore args and kwargs
             else:
                 df = pd.read_json( filename, orient=orient, *args, **kwargs )
+        case 'html':
+            if 'flavor' not in kwargs:
+                kwargs['flavor'] = 'bs4'
+            if 'index' in kwargs:
+                index = kwargs['index']
+                del kwargs['index']
+            else:
+                index = 0
+            with open( filename, 'r' ) as f:
+                dfs = pd.read_html( f, *args, **kwargs )
+                df = dfs[index]
         case _:
             raise ValueError( f'Unsupported file extension: {extension}' )
     # In many cases, the index may have been pushed into the first column of
     # the storage format.  A heuristic to reverse that is to check to see if the
     # first column could function as an index, and if so, use it as one:
-    if extension in [ 'csv', 'tsv', 'xls', 'xlsx', 'dta' ] and \
+    if extension in [ 'csv', 'tsv', 'xls', 'xlsx', 'dta', 'html' ] and \
             not any( df.index.duplicated() ):
         df.set_index( df.columns[0], inplace=True )
     # Done, so return the result:
@@ -132,6 +143,9 @@ def save_any_dataframe ( self, filename, *args, **kwargs ):
             if 'orient' not in kwargs:
                 kwargs['orient'] = 'split'
             self.to_json( filename, *args, **kwargs )
+        case 'html':
+            with open( filename, 'w' ) as f:
+                self.to_html( f, *args, **kwargs )
         case _:
             raise ValueError( f'Unsupported file extension: {extension}' )
 
