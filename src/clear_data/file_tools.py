@@ -2,6 +2,9 @@
 import pandas as pd
 import importlib
 import json
+import requests
+import tempfile
+import os
 
 def load_any_file ( filename, *args, **kwargs ):
     '''
@@ -13,6 +16,12 @@ def load_any_file ( filename, *args, **kwargs ):
     if extension == 'xls' and importlib.util.find_spec( 'xlwt' ) is None:
         raise ImportError( 'Cannot read the XLS format without the '
             + '(deprecated) xlwt module; install it to use this feature' )
+    # utility function
+    def is_url ():
+        return any(
+            filename.startswith( f'{protocol}://' )
+            for protocol in ['http','https','ftp']
+        )
     # Load the file using the method appropriate to the filename's extension.
     match extension:
         case 'csv':
@@ -27,10 +36,17 @@ def load_any_file ( filename, *args, **kwargs ):
             df = pd.read_parquet( filename, *args, **kwargs )
         case 'pickle' | 'pkl':
             df = pd.read_pickle( filename, *args, **kwargs )
-        case 'hdf':
+        case 'hdf' | 'h5':
             if 'key' not in kwargs:
                 kwargs['key'] = 'default'
-            df = pd.read_hdf( filename, *args, **kwargs )
+            if is_url():
+                with tempfile.TemporaryDirectory() as dir:
+                    temp_filename = os.path.join( dir, 'data.h5' )
+                    with open( temp_filename, 'wb' ) as f:
+                        f.write( requests.get( filename ).content )
+                    df = pd.read_hdf( temp_filename, *args, **kwargs )
+            else:
+                df = pd.read_hdf( filename, *args, **kwargs )
         case 'dta':
             df = pd.read_stata( filename, *args, **kwargs )
         case 'orc':
@@ -38,8 +54,11 @@ def load_any_file ( filename, *args, **kwargs ):
         case 'json':
             if 'orient' not in kwargs:
                 # detect orientation from JSON structure when possible
-                with open( filename ) as f:
-                    json_obj = json.load( f )
+                if is_url():
+                    json_obj = json.loads( requests.get( filename ).text )
+                else:
+                    with open( filename ) as f:
+                        json_obj = json.load( f )
                 if type( json_obj ) == list:
                     if all( type( inner ) == list for inner in json_obj ):
                         orient = 'values'
@@ -91,9 +110,12 @@ def load_any_file ( filename, *args, **kwargs ):
                 del kwargs['index']
             else:
                 index = 0
-            with open( filename, 'r' ) as f:
-                dfs = pd.read_html( f, *args, **kwargs )
-                df = dfs[index]
+            if is_url():
+                dfs = pd.read_html( filename, *args, **kwargs )
+            else:
+                with open( filename, 'r' ) as f:
+                    dfs = pd.read_html( f, *args, **kwargs )
+            df = dfs[index]
         case _:
             raise ValueError( f'Unsupported file extension: {extension}' )
     # In many cases, the index may have been pushed into the first column of
@@ -131,7 +153,7 @@ def save_any_dataframe ( self, filename, *args, **kwargs ):
             self.to_parquet( filename, *args, **kwargs )
         case 'pickle' | 'pkl':
             self.to_pickle( filename, *args, **kwargs )
-        case 'hdf':
+        case 'hdf' | 'h5':
             if 'key' not in kwargs:
                 kwargs['key'] = 'default'
             self.to_hdf( filename, *args, **kwargs )

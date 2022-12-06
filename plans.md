@@ -12,7 +12,6 @@ yet to implement are listed as to-dos.
    the file to figure out what `X` should be, together with appropriate
    parameters specific to the file type, or explaining troubles to the user
    in a clear way if the right path forward can't be easily determined.
-    * Should also add support for URLs.
     * Might be able to add GraphML support for both edge lists and adjacency
       matrices.
  * `DataFrame.save("filename")` uses the extension and does something

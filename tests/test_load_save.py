@@ -171,11 +171,17 @@ class TestLoadSave( unittest.TestCase ):
     def test_read_write_hdf ( self ):
         df = TestLoadSave.test_df.copy()
         # Save it and ensure that it got saved
-        filename = temp_filename( 'hdf' )
+        filename = temp_filename( 'h5' )
         self.assertFalse( file_exists( filename ) )
         df.save( filename )
         self.assertTrue( file_exists( filename ) )
         # Reload it and ensure that it's the same (because HDF is robust)
+        self.assert_same( pd.load( filename ) )
+        # Repeat above test with alternate file extension
+        filename = temp_filename( 'hdf' )
+        self.assertFalse( file_exists( filename ) )
+        df.save( filename )
+        self.assertTrue( file_exists( filename ) )
         self.assert_same( pd.load( filename ) )
 
     def test_read_write_hdf_multiple ( self ):
@@ -183,7 +189,7 @@ class TestLoadSave( unittest.TestCase ):
         int_df = pd.example( 10, 10, int )
         # Repeat above test, this time using a specific file key...
         # ...two, in fact, to be sure we can put more than 1 thing in the file.
-        filename = temp_filename( 'hdf' )
+        filename = temp_filename( 'h5' )
         self.assertFalse( file_exists( filename ) )
         df.save( filename, key='employees' )
         int_df.save( filename, key='integers' )
@@ -256,6 +262,25 @@ class TestLoadSave( unittest.TestCase ):
             df.save( 'anything.foobar' )
         with self.assertRaisesRegex( ValueError, 'Unsupported.*extension' ):
             df.save( 'anything.xml' )
+
+    def test_fetching_from_URLs ( self ):
+        github_folder = 'https://raw.githubusercontent.com/nathancarter/clear-data/main/tests/data/'
+        test_data_files = os.listdir( os.path.join( this_dir, 'data' ) )
+        for filename in test_data_files:
+            extension = filename.split( '.' )[-1]
+            # if extension == 'h5':
+            #     continue
+            local_path = os.path.join( this_dir, 'data', filename )
+            online_path = github_folder + filename
+            print( local_path, online_path )
+            read_locally = pd.load( local_path )
+            read_online = pd.load( online_path )
+            if extension in ['parquet','pickle','pkl','hdf','orc']:
+                self.assert_same( read_locally, read_online )
+            elif extension in ['dta']:
+                self.assert_same_except_int_dtypes( read_locally, read_online )
+            else:
+                self.assert_same_except_dtypes( read_locally, read_online )
 
 if __name__ == '__main__':
     unittest.main()
