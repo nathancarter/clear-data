@@ -124,6 +124,8 @@ def load_any_file ( filename, *args, **kwargs ):
     if extension in [ 'csv', 'tsv', 'xls', 'xlsx', 'dta', 'html' ] and \
             not any( df.index.duplicated() ):
         df.set_index( df.columns[0], inplace=True )
+        if df.index.name.startswith( 'Unnamed: ' ):
+            df.index.name = None
     # Done, so return the result:
     return df
 
