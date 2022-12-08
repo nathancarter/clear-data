@@ -1,22 +1,4 @@
 
-# File load/save
-
-Work has begun on the following functions, but is not complete.  The intent is
-that they can take extra parameters for specific actions/details, such as a
-sheet name in Excel.  Already-implemented formats are not listed below; formats
-yet to implement are listed as to-dos.
-
- * `pd.load("file or URL")` that is smart enough to handle a wide variety
-   of file types and gives nice reports/explanations if something went
-   wrong, in general being like `pd.read_X` for various `X`, but inspecting
-   the file to figure out what `X` should be, together with appropriate
-   parameters specific to the file type, or explaining troubles to the user
-   in a clear way if the right path forward can't be easily determined.
-    * Might be able to add GraphML support for both edge lists and adjacency
-      matrices.
- * `DataFrame.save("filename")` uses the extension and does something
-   smart, with output about what it did.
-
 # Subsetting
 
 Similar to `df.rows_satisfying(pred)` have `df.index_satisfying(pred)`,
