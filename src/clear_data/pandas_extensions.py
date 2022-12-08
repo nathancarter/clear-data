@@ -34,19 +34,22 @@ def random_dataframe ( num_rows = 20, num_cols = 5, type = 'Employee' ):
 
     Example uses of this function:
     
-    `pandas.DataFrame.example(10,3,int)` gives a DataFrame of random integers,
-    with 10 rows and 3 columns.
+    `pd.example(10,3,int)` gives a DataFrame of random integers, with 10 rows
+    and 3 columns.
     
-    `pandas.DataFrame.example(5,5,float)` gives a square (5-by-5) DataFrame of
-    random floating point values.
+    `pd.example(5,5,float)` gives a square (5-by-5) DataFrame of random floating
+    point values.
 
-    `pandas.DataFrame.example(100,10,'Employee')` gives a DataFrame of random
-    employee records (using the top 50 most common first and last names from
-    recent US Census and Social Security records, with random departments, IDs,
-    salaries, etc.), with 100 rows and 10 columns.
+    `pd.example(100,10,'Employee')` gives a DataFrame of random employee records
+    (using the top 50 most common first and last names from recent US Census and
+    Social Security records, with random departments, IDs, salaries, etc.), with
+    100 rows and 10 columns.
 
-    The default, produced by `pandas.DataFrame.example()`, uses 20 rows, 6
-    columns, and Employee records.
+    The default, produced by `pd.example()`, uses 20 rows, 6 columns, and
+    Employee records.
+
+	This function is added to the `pandas` module, so you can call it as
+	`pd.example(args).
     '''
     if type == int:
         return pd.DataFrame(

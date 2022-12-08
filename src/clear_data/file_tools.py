@@ -8,7 +8,46 @@ import os
 
 def load_any_file ( filename, *args, **kwargs ):
     '''
-    Documentation forthcoming.
+    Load a DataFrame from a file with any of the following extensions, inferring
+    the format from the extension: CSV, TSV, XLSX, parquet, PKL or pickle, HDF
+    or h5, DTA, ORC, JSON, HTML.  URLs can also be used instead of filenames.
+    The XLS extension is not supported due to the deprecation of the xlwt module
+    that pandas would use to read such files.
+
+    The only required argument is the filename (with extension), but if you pass
+    additional positional or keyword arguments, they will be passed on to the
+    appropriate pandas loading function (e.g., `pd.read_csv()`,
+    `pd.read_html()`, etc.).
+
+    Certain formats come with certain convenience behaviors built in, to help
+    alleviate some of the annoyances that come with pandas.
+
+      1. If the filename is a URL, but the format does not support loading from a
+         URL (such as HDF) the content will be downloaded to a temporary folder
+         and read from there.
+      2. If the extension is TSV, the separator argument is automatically set to
+         the tab character in the call to `pd.read_csv()`.
+      3. If no key is specified when reading from an HDF file, the key "default"
+         is used.  This works well with the `df.save()` function in Clear Data,
+         which uses that same default, so that if you want to use HDF files for
+         archiving one DataFrame per file, you can omit the key.
+      4. If the format is JSON, then the "orient" argument to `pd.read_json()`
+         will be inferred from the structure of the data itself.  In the rare case
+         where the automatic inference guesses incorrectly between "index" and
+         "columns," you can pass the "orient" keyword argument manually.
+      5. If the format is HTML, the Beautiful Soup 4 library is used for parsing,
+         which alleviates some silent failures of the default lxml parsing library
+         (though you can still restore the original behavior with `flavor="lxml"`
+         if you prefer, since it is much more efficient for large files).
+      6. If the format is HTML, by default, the first table in the page is
+         returned.  If you want a different one, pass `index=1` or `index=2` or
+         some other values (zero-based).  That is, the surprise that
+         `pd.read_html()` returns a list of DataFrames is explicitly removed here;
+         you receive exactly one DataFrame, as with all other `pd.read_*()`
+         routines.  You decide which one with the "index" argument.
+
+	This function is added to the `pandas` module, so you can call it as
+	`pd.load(filename)`.
     '''
     extension = filename.split( '.' )[-1].lower()
     # Throw an error if they are trying to read the old XLS format without the
@@ -133,7 +172,31 @@ pd.load = load_any_file
 
 def save_any_dataframe ( self, filename, *args, **kwargs ):
     '''
-    Documentation forthcoming.
+    Save a DataFrame to a file with any of the following extensions, inferring
+    the format from the extension: CSV, TSV, XLSX, parquet, PKL or pickle, HDF
+    or h5, DTA, ORC, JSON, HTML.  The XLS extension is not supported due to the
+    deprecation of the xlwt module that pandas would use to read such files.
+
+    The only required argument is the filename (with extension), but if you pass
+    additional positional or keyword arguments, they will be passed on to the
+    appropriate pandas saving function (e.g., `df.to_csv()`, `df.to_html()`,
+    etc.).
+
+    Certain formats come with certain convenience behaviors built in, to help
+    alleviate some of the annoyances that come with pandas.
+
+      1. If the extension is TSV, the separator argument is automatically set to
+         the tab character in the call to `df.to_csv()`.
+      2. If no key is specified when reading from an HDF file, the key "default"
+         is used.  This works well with the `pd.load()` function in Clear Data,
+         which uses that same default, so that if you want to use HDF files for
+         archiving one DataFrame per file, you can omit the key.
+      3. If the format is JSON, then the "orient" argument to `df.to_json()` is
+         set to "split" (instead of the default "columns") because this helps
+         ensure accuracy when reloading.
+
+	This function is added to the `DataFrame` class, so you can call it as
+	`df.save(filename)`.
     '''
     extension = filename.split( '.' )[-1].lower()
     # Throw an error if they are trying to write in the old XLS format without
