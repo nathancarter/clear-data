@@ -268,11 +268,8 @@ class TestLoadSave( unittest.TestCase ):
         test_data_files = os.listdir( os.path.join( this_dir, 'data' ) )
         for filename in test_data_files:
             extension = filename.split( '.' )[-1]
-            # if extension == 'h5':
-            #     continue
             local_path = os.path.join( this_dir, 'data', filename )
             online_path = github_folder + filename
-            print( local_path, online_path )
             read_locally = pd.load( local_path )
             read_online = pd.load( online_path )
             if extension in ['parquet','pickle','pkl','hdf','orc']:
