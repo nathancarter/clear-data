@@ -73,8 +73,8 @@ def load_any_file ( filename, *args, **kwargs ):
          you receive exactly one DataFrame, as with all other `pd.read_*()`
          routines.  You decide which one with the &#34;index&#34; argument.
 
-        This function is added to the `pandas` module, so you can call it as
-        `pd.load(filename)`.
+    This function is added to the `pandas` module, so you can call it as
+    `pd.load(filename)`.
     &#39;&#39;&#39;
     extension = filename.split( &#39;.&#39; )[-1].lower()
     # Throw an error if they are trying to read the old XLS format without the
@@ -222,8 +222,8 @@ def save_any_dataframe ( self, filename, *args, **kwargs ):
          set to &#34;split&#34; (instead of the default &#34;columns&#34;) because this helps
          ensure accuracy when reloading.
 
-        This function is added to the `DataFrame` class, so you can call it as
-        `df.save(filename)`.
+    This function is added to the `DataFrame` class, so you can call it as
+    `df.save(filename)`.
     &#39;&#39;&#39;
     extension = filename.split( &#39;.&#39; )[-1].lower()
     # Throw an error if they are trying to write in the old XLS format without
@@ -309,8 +309,7 @@ where the automatic inference guesses incorrectly between "index" and
 which alleviates some silent failures of the default lxml parsing library
 (though you can still restore the original behavior with <code>flavor="lxml"</code>
 if you prefer, since it is much more efficient for large files).</li>
-<li>
-<p>If the format is HTML, by default, the first table in the page is
+<li>If the format is HTML, by default, the first table in the page is
 returned.
 If you want a different one, pass <code>index=1</code> or <code>index=2</code> or
 some other values (zero-based).
@@ -318,11 +317,10 @@ That is, the surprise that
 <code>pd.read_html()</code> returns a list of DataFrames is explicitly removed here;
 you receive exactly one DataFrame, as with all other <code>pd.read_*()</code>
 routines.
-You decide which one with the "index" argument.</p>
+You decide which one with the "index" argument.</li>
+</ol>
 <p>This function is added to the <code>pandas</code> module, so you can call it as
-<code>pd.load(filename)</code>.</p>
-</li>
-</ol></div>
+<code>pd.load(filename)</code>.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -367,8 +365,8 @@ You decide which one with the "index" argument.</p>
          you receive exactly one DataFrame, as with all other `pd.read_*()`
          routines.  You decide which one with the &#34;index&#34; argument.
 
-        This function is added to the `pandas` module, so you can call it as
-        `pd.load(filename)`.
+    This function is added to the `pandas` module, so you can call it as
+    `pd.load(filename)`.
     &#39;&#39;&#39;
     extension = filename.split( &#39;.&#39; )[-1].lower()
     # Throw an error if they are trying to read the old XLS format without the
@@ -513,14 +511,12 @@ is used.
 This works well with the <code>pd.load()</code> function in Clear Data,
 which uses that same default, so that if you want to use HDF files for
 archiving one DataFrame per file, you can omit the key.</li>
-<li>
-<p>If the format is JSON, then the "orient" argument to <code>df.to_json()</code> is
+<li>If the format is JSON, then the "orient" argument to <code>df.to_json()</code> is
 set to "split" (instead of the default "columns") because this helps
-ensure accuracy when reloading.</p>
+ensure accuracy when reloading.</li>
+</ol>
 <p>This function is added to the <code>DataFrame</code> class, so you can call it as
-<code>df.save(filename)</code>.</p>
-</li>
-</ol></div>
+<code>df.save(filename)</code>.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -550,8 +546,8 @@ ensure accuracy when reloading.</p>
          set to &#34;split&#34; (instead of the default &#34;columns&#34;) because this helps
          ensure accuracy when reloading.
 
-        This function is added to the `DataFrame` class, so you can call it as
-        `df.save(filename)`.
+    This function is added to the `DataFrame` class, so you can call it as
+    `df.save(filename)`.
     &#39;&#39;&#39;
     extension = filename.split( &#39;.&#39; )[-1].lower()
     # Throw an error if they are trying to write in the old XLS format without

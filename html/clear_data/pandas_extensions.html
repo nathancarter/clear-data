@@ -30,7 +30,7 @@
 import pandas as pd
 
 # Top 50 last names from 2010 US Census data:
-def random_last_name ():
+def _random_last_name ():
     return np.random.choice( [ &#39;Smith&#39;, &#39;Johnson&#39;, &#39;Williams&#39;, &#39;Brown&#39;,
         &#39;Jones&#39;, &#39;Garcia&#39;, &#39;Miller&#39;, &#39;Davis&#39;, &#39;Rodriguez&#39;, &#39;Martinez&#39;,
         &#39;Hernandez&#39;, &#39;Lopez&#39;, &#39;Gonzalez&#39;, &#39;Wilson&#39;, &#39;Anderson&#39;, &#39;Thomas&#39;,
@@ -40,7 +40,7 @@ def random_last_name ():
         &#39;Nguyen&#39;, &#39;Hill&#39;, &#39;Flores&#39;, &#39;Green&#39;, &#39;Adams&#39;, &#39;Nelson&#39;, &#39;Baker&#39;,
         &#39;Hall&#39;, &#39;Rivera&#39;, &#39;Campbell&#39;, &#39;Mitchell&#39;, &#39;Carter&#39;, &#39;Roberts&#39; ] )
 # Top 50 first names from 2021 US Social Security data, 25 male, 25 female:
-def random_first_name ():
+def _random_first_name ():
     return np.random.choice( [ &#39;Liam&#39;, &#39;Olivia&#39;, &#39;Noah&#39;, &#39;Emma&#39;, &#39;Oliver&#39;,
         &#39;Charlotte&#39;, &#39;Elijah&#39;, &#39;Amelia&#39;, &#39;James&#39;, &#39;Ava&#39;, &#39;William&#39;, &#39;Sophia&#39;,
         &#39;Benjamin&#39;, &#39;Isabella&#39;, &#39;Lucas&#39;, &#39;Mia&#39;, &#39;Henry&#39;, &#39;Evelyn&#39;, &#39;Theodore&#39;,
@@ -50,7 +50,7 @@ def random_first_name ():
         &#39;Logan&#39;, &#39;Emily&#39;, &#39;Owen&#39;, &#39;Aria&#39;, &#39;Samuel&#39;, &#39;Penelope&#39;, &#39;Jacob&#39;,
         &#39;Chloe&#39;, &#39;Asher&#39;, &#39;Layla&#39; ] )
 # Made up list of departments
-def random_department ():
+def _random_department ():
     return np.random.choice( [ &#39;Sales&#39;, &#39;Service&#39;, &#39;Management&#39;,
         &#39;Administration&#39;, &#39;Finance&#39;, &#39;Accounting&#39;, &#39;Analytics&#39;, &#39;Research&#39;,
         &#39;Human Resources&#39;, &#39;Facilities&#39;, &#39;Information Technology&#39; ] )
@@ -75,8 +75,8 @@ def random_dataframe ( num_rows = 20, num_cols = 5, type = &#39;Employee&#39; ):
     The default, produced by `pd.example()`, uses 20 rows, 6 columns, and
     Employee records.
 
-        This function is added to the `pandas` module, so you can call it as
-        `pd.example(args).
+    This function is added to the `pandas` module, so you can call it as
+    `pd.example(args).
     &#39;&#39;&#39;
     if type == int:
         return pd.DataFrame(
@@ -89,12 +89,12 @@ def random_dataframe ( num_rows = 20, num_cols = 5, type = &#39;Employee&#39; ):
     if type == &#39;Employee&#39;:
         num_cols = max( num_cols, 6 )
         result = pd.DataFrame( {
-            &#39;LastName&#39; : [ random_last_name() for _ in range( num_rows ) ],
-            &#39;FirstName&#39; : [ random_first_name() for _ in range( num_rows ) ],
+            &#39;LastName&#39; : [ _random_last_name() for _ in range( num_rows ) ],
+            &#39;FirstName&#39; : [ _random_first_name() for _ in range( num_rows ) ],
             &#39;ID&#39; : [
                 str(id) for id in np.random.randint( 100000, 999999, num_rows )
             ],
-            &#39;Department&#39; : [ random_department() for _ in range( num_rows ) ],
+            &#39;Department&#39; : [ _random_department() for _ in range( num_rows ) ],
             &#39;Salary&#39; : np.random.uniform( 50000, 150000, num_rows ).round( 2 ),
             &#39;YearsAtCompany&#39; : np.random.randint( 1, 20, num_rows )
         } )
@@ -130,9 +130,8 @@ Social Security records, with random departments, IDs, salaries, etc.), with
 100 rows and 10 columns.</p>
 <p>The default, produced by <code>pd.example()</code>, uses 20 rows, 6 columns, and
 Employee records.</p>
-<pre><code>This function is added to the &lt;code&gt;pandas&lt;/code&gt; module, so you can call it as
-`pd.example(args).
-</code></pre></div>
+<p>This function is added to the <code>pandas</code> module, so you can call it as
+`pd.example(args).</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -157,8 +156,8 @@ Employee records.</p>
     The default, produced by `pd.example()`, uses 20 rows, 6 columns, and
     Employee records.
 
-        This function is added to the `pandas` module, so you can call it as
-        `pd.example(args).
+    This function is added to the `pandas` module, so you can call it as
+    `pd.example(args).
     &#39;&#39;&#39;
     if type == int:
         return pd.DataFrame(
@@ -171,12 +170,12 @@ Employee records.</p>
     if type == &#39;Employee&#39;:
         num_cols = max( num_cols, 6 )
         result = pd.DataFrame( {
-            &#39;LastName&#39; : [ random_last_name() for _ in range( num_rows ) ],
-            &#39;FirstName&#39; : [ random_first_name() for _ in range( num_rows ) ],
+            &#39;LastName&#39; : [ _random_last_name() for _ in range( num_rows ) ],
+            &#39;FirstName&#39; : [ _random_first_name() for _ in range( num_rows ) ],
             &#39;ID&#39; : [
                 str(id) for id in np.random.randint( 100000, 999999, num_rows )
             ],
-            &#39;Department&#39; : [ random_department() for _ in range( num_rows ) ],
+            &#39;Department&#39; : [ _random_department() for _ in range( num_rows ) ],
             &#39;Salary&#39; : np.random.uniform( 50000, 150000, num_rows ).round( 2 ),
             &#39;YearsAtCompany&#39; : np.random.randint( 1, 20, num_rows )
         } )
@@ -185,61 +184,6 @@ Employee records.</p>
                 np.random.normal( 50, 25, num_rows )
         return result
     raise TypeError( f&#39;Cannot generate example DataFrame of &#34;{str(type)}&#34;&#39;)</code></pre>
-</details>
-</dd>
-<dt id="clear_data.pandas_extensions.random_department"><code class="name flex">
-<span>def <span class="ident">random_department</span></span>(<span>)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def random_department ():
-    return np.random.choice( [ &#39;Sales&#39;, &#39;Service&#39;, &#39;Management&#39;,
-        &#39;Administration&#39;, &#39;Finance&#39;, &#39;Accounting&#39;, &#39;Analytics&#39;, &#39;Research&#39;,
-        &#39;Human Resources&#39;, &#39;Facilities&#39;, &#39;Information Technology&#39; ] )</code></pre>
-</details>
-</dd>
-<dt id="clear_data.pandas_extensions.random_first_name"><code class="name flex">
-<span>def <span class="ident">random_first_name</span></span>(<span>)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def random_first_name ():
-    return np.random.choice( [ &#39;Liam&#39;, &#39;Olivia&#39;, &#39;Noah&#39;, &#39;Emma&#39;, &#39;Oliver&#39;,
-        &#39;Charlotte&#39;, &#39;Elijah&#39;, &#39;Amelia&#39;, &#39;James&#39;, &#39;Ava&#39;, &#39;William&#39;, &#39;Sophia&#39;,
-        &#39;Benjamin&#39;, &#39;Isabella&#39;, &#39;Lucas&#39;, &#39;Mia&#39;, &#39;Henry&#39;, &#39;Evelyn&#39;, &#39;Theodore&#39;,
-        &#39;Harper&#39;, &#39;Jack&#39;, &#39;Luna&#39;, &#39;Levi&#39;, &#39;Camila&#39;, &#39;Alexander&#39;, &#39;Gianna&#39;,
-        &#39;Jackson&#39;, &#39;Elizabeth&#39;, &#39;Mateo&#39;, &#39;Eleanor&#39;, &#39;Daniel&#39;, &#39;Ella&#39;, &#39;Michael&#39;,
-        &#39;Abigail&#39;, &#39;Mason&#39;, &#39;Sofia&#39;, &#39;Sebastian&#39;, &#39;Avery&#39;, &#39;Ethan&#39;, &#39;Scarlett&#39;,
-        &#39;Logan&#39;, &#39;Emily&#39;, &#39;Owen&#39;, &#39;Aria&#39;, &#39;Samuel&#39;, &#39;Penelope&#39;, &#39;Jacob&#39;,
-        &#39;Chloe&#39;, &#39;Asher&#39;, &#39;Layla&#39; ] )</code></pre>
-</details>
-</dd>
-<dt id="clear_data.pandas_extensions.random_last_name"><code class="name flex">
-<span>def <span class="ident">random_last_name</span></span>(<span>)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def random_last_name ():
-    return np.random.choice( [ &#39;Smith&#39;, &#39;Johnson&#39;, &#39;Williams&#39;, &#39;Brown&#39;,
-        &#39;Jones&#39;, &#39;Garcia&#39;, &#39;Miller&#39;, &#39;Davis&#39;, &#39;Rodriguez&#39;, &#39;Martinez&#39;,
-        &#39;Hernandez&#39;, &#39;Lopez&#39;, &#39;Gonzalez&#39;, &#39;Wilson&#39;, &#39;Anderson&#39;, &#39;Thomas&#39;,
-        &#39;Taylor&#39;, &#39;Moore&#39;, &#39;Jackson&#39;, &#39;Martin&#39;, &#39;Lee&#39;, &#39;Perez&#39;, &#39;Thompson&#39;,
-        &#39;White&#39;, &#39;Harris&#39;, &#39;Sanchez&#39;, &#39;Clark&#39;, &#39;Ramirez&#39;, &#39;Lewis&#39;, &#39;Robinson&#39;,
-        &#39;Walker&#39;, &#39;Young&#39;, &#39;Allen&#39;, &#39;King&#39;, &#39;Wright&#39;, &#39;Scott&#39;, &#39;Torres&#39;,
-        &#39;Nguyen&#39;, &#39;Hill&#39;, &#39;Flores&#39;, &#39;Green&#39;, &#39;Adams&#39;, &#39;Nelson&#39;, &#39;Baker&#39;,
-        &#39;Hall&#39;, &#39;Rivera&#39;, &#39;Campbell&#39;, &#39;Mitchell&#39;, &#39;Carter&#39;, &#39;Roberts&#39; ] )</code></pre>
 </details>
 </dd>
 </dl>
@@ -261,9 +205,6 @@ Employee records.</p>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
 <li><code><a title="clear_data.pandas_extensions.random_dataframe" href="#clear_data.pandas_extensions.random_dataframe">random_dataframe</a></code></li>
-<li><code><a title="clear_data.pandas_extensions.random_department" href="#clear_data.pandas_extensions.random_department">random_department</a></code></li>
-<li><code><a title="clear_data.pandas_extensions.random_first_name" href="#clear_data.pandas_extensions.random_first_name">random_first_name</a></code></li>
-<li><code><a title="clear_data.pandas_extensions.random_last_name" href="#clear_data.pandas_extensions.random_last_name">random_last_name</a></code></li>
 </ul>
 </li>
 </ul>

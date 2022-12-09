@@ -42,8 +42,8 @@ def dataframe_is_a_function ( self, input, output ):
     themselves, or any other series of the same length.  Or you can pass the
     DataFrame&#39;s index, which will be converted to a Series for you.
 
-        This function is added to the `DataFrame` class, so you can call it as
-        `df.is_a_function(input_col,output_col)` or as
+    This function is added to the `DataFrame` class, so you can call it as
+    `df.is_a_function(input_col,output_col)` or as
     `df.can_lookup(input_col,output_col)`.
     &#34;&#34;&#34;
     # ensure input is a Series
@@ -75,8 +75,8 @@ def dataframe_to_function ( self, input, output ):
     themselves, or any other series of the same length.  Or you can pass the
     DataFrame&#39;s index, which will be converted to a Series for you.
 
-        This function is added to the `DataFrame` class, so you can call it as
-        `df.to_function(input_col,output_col)` or
+    This function is added to the `DataFrame` class, so you can call it as
+    `df.to_function(input_col,output_col)` or
     `df.get_function(input_col,output_col)`.
     &#34;&#34;&#34;
     # ensure input is a Series
@@ -107,11 +107,11 @@ def dataframe_to_dictionary ( self, input, output ):
     themselves, or any other series of the same length.  Or you can pass the
     DataFrame&#39;s index, which will be converted to a Series for you.
 
-        This function is added to the `DataFrame` class, so you can call it as
-        `df.to_dictionary(input_col,output_col)`,
-        `df.get_dictionary(input_col,output_col)`,
-        `df.to_dict(input_col,output_col)`, or
-        `df.get_dict(input_col,output_col)`.
+    This function is added to the `DataFrame` class, so you can call it as
+    `df.to_dictionary(input_col,output_col)`,
+    `df.get_dictionary(input_col,output_col)`,
+    `df.to_dict(input_col,output_col)`, or
+    `df.get_dict(input_col,output_col)`.
     &#34;&#34;&#34;
     # ensure input is a Series
     if type( input ) is str:
@@ -146,7 +146,7 @@ def dataframe_to_relation ( self, *column_names ):
     `R(1,4) == True` but `R(1,2) == False`, becauase `R` represents the
     collection of tuples (1,4), (2,5), and (3,6).
 
-        This function is added to the `DataFrame` class, so you can call it using
+    This function is added to the `DataFrame` class, so you can call it using
     any of the following means: `my_df.to_relation(columns...)`,
     `my_df.to_predicate(columns...)` `my_df.get_relation(columns...)`, and
     `my_df.get_predicate(columns...)`.
@@ -168,8 +168,8 @@ def dataframe_rows_satisfying ( self, test, efficient=False ):
     &#34;&#34;&#34;
     There are two ways to use this function.
     
-    First, you can call `dataframe_rows_satisfying(df,S)` where `S` is a
-    pandas Series of boolean values, and it will give the same result as
+    First, you can call `dataframe_rows_satisfying` on a DataFrame `df` and a
+    pandas Series `S` of boolean values, and it will give the same result as
     `df[S]` would.  Obviously that notation is more concise, while this one is
     more explicit.
     
@@ -178,8 +178,8 @@ def dataframe_rows_satisfying ( self, test, efficient=False ):
     `df.rows_where(S)`, `df.rows_such_that(S)`, `df.rows_in_which(S)`,
     `df.select(S)`, `df.select_rows(S)`, or `df.subset(S)`.
 
-    Second, you can call `dataframe_rows_satisfying(df,P)` where `P` is any
-    Python function to be used as a predicate on rows.  `P` will be called
+    Second, you can call `dataframe_rows_satisfying` on a DataFrame `df` and any
+    Python function `P` to be used as a predicate on rows.  `P` will be called
     once for each row, with the row passed as a pandas Series.  The result of
     the function will be another DataFrame containing only the rows for which
     `P` returns True.  The same calling synonyms as above apply in this case
@@ -191,6 +191,8 @@ def dataframe_rows_satisfying ( self, test, efficient=False ):
     copy, because this is often perfectly acceptable, given that most use
     cases do not involve big data.  You can pass the optional keyword
     argument `efficient=True` to get a slice instead of a copy.
+
+    See also `dataframe_indices_satisfying()`.
     &#34;&#34;&#34;
     if callable( test ):
         test = pd.Series( test( row ) for _,row in self.iterrows() )
@@ -201,9 +203,42 @@ pd.DataFrame.rows_satisfying = dataframe_rows_satisfying
 pd.DataFrame.rows_such_that = dataframe_rows_satisfying
 pd.DataFrame.rows_in_which = dataframe_rows_satisfying
 pd.DataFrame.rows_where = dataframe_rows_satisfying
-pd.DataFrame.rows_select_rows = dataframe_rows_satisfying
+pd.DataFrame.select_rows = dataframe_rows_satisfying
 pd.DataFrame.rows_select = dataframe_rows_satisfying
-pd.DataFrame.rows_subset = dataframe_rows_satisfying</code></pre>
+pd.DataFrame.rows_subset = dataframe_rows_satisfying
+
+def dataframe_indices_satisfying ( self, test, efficient=False ):
+    &#34;&#34;&#34;
+    There are two ways to use this function.
+    
+    First, you can call `dataframe_indices_satisfying` on a DataFrame `df` and a
+    Series `S` of boolean values, and it will give the same result as
+    `df.index[S]` would.  Obviously that notation is more concise, while this
+    one is more explicit.
+    
+    Because this function will be installed in the DataFrame class, you can
+    call it as `df.indices_satisfying(S)` or any of the following synonyms:
+    `df.indices_where(S)`, `df.indices_such_that(S)`, or
+    `df.indices_in_which(S)`.
+
+    Second, you can call `dataframe_indices_satisfying` on a DataFrame `df` and
+    a any Python function `P` to be used as a predicate on rows.  `P` will be
+    called once for each row, with the row passed as a pandas Series.  Note that
+    the row&#39;s `.name` property is its corresponding index entry, in case your
+    predicate `P` wishes to use that information.  The result of the function
+    will be a pandas Index containing only the indices for which `P` returns
+    True.  The same calling synonyms as above apply in this case as well.
+
+    See also `dataframe_rows_satisfying()`.
+    &#34;&#34;&#34;
+    if callable( test ):
+        test = pd.Series( test( row ) for _,row in self.iterrows() )
+    return self.index[test]
+
+pd.DataFrame.indices_satisfying = dataframe_indices_satisfying
+pd.DataFrame.indices_such_that = dataframe_indices_satisfying
+pd.DataFrame.indices_in_which = dataframe_indices_satisfying
+pd.DataFrame.indices_where = dataframe_indices_satisfying</code></pre>
 </details>
 </section>
 <section>
@@ -213,6 +248,65 @@ pd.DataFrame.rows_subset = dataframe_rows_satisfying</code></pre>
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
+<dt id="clear_data.dataframe_extensions.dataframe_indices_satisfying"><code class="name flex">
+<span>def <span class="ident">dataframe_indices_satisfying</span></span>(<span>self, test, efficient=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>There are two ways to use this function.</p>
+<p>First, you can call <code><a title="clear_data.dataframe_extensions.dataframe_indices_satisfying" href="#clear_data.dataframe_extensions.dataframe_indices_satisfying">dataframe_indices_satisfying()</a></code> on a DataFrame <code>df</code> and a
+Series <code>S</code> of boolean values, and it will give the same result as
+<code>df.index[S]</code> would.
+Obviously that notation is more concise, while this
+one is more explicit.</p>
+<p>Because this function will be installed in the DataFrame class, you can
+call it as <code>df.indices_satisfying(S)</code> or any of the following synonyms:
+<code>df.indices_where(S)</code>, <code>df.indices_such_that(S)</code>, or
+<code>df.indices_in_which(S)</code>.</p>
+<p>Second, you can call <code><a title="clear_data.dataframe_extensions.dataframe_indices_satisfying" href="#clear_data.dataframe_extensions.dataframe_indices_satisfying">dataframe_indices_satisfying()</a></code> on a DataFrame <code>df</code> and
+a any Python function <code>P</code> to be used as a predicate on rows.
+<code>P</code> will be
+called once for each row, with the row passed as a pandas Series.
+Note that
+the row's <code>.name</code> property is its corresponding index entry, in case your
+predicate <code>P</code> wishes to use that information.
+The result of the function
+will be a pandas Index containing only the indices for which <code>P</code> returns
+True.
+The same calling synonyms as above apply in this case as well.</p>
+<p>See also <code><a title="clear_data.dataframe_extensions.dataframe_rows_satisfying" href="#clear_data.dataframe_extensions.dataframe_rows_satisfying">dataframe_rows_satisfying()</a></code>.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def dataframe_indices_satisfying ( self, test, efficient=False ):
+    &#34;&#34;&#34;
+    There are two ways to use this function.
+    
+    First, you can call `dataframe_indices_satisfying` on a DataFrame `df` and a
+    Series `S` of boolean values, and it will give the same result as
+    `df.index[S]` would.  Obviously that notation is more concise, while this
+    one is more explicit.
+    
+    Because this function will be installed in the DataFrame class, you can
+    call it as `df.indices_satisfying(S)` or any of the following synonyms:
+    `df.indices_where(S)`, `df.indices_such_that(S)`, or
+    `df.indices_in_which(S)`.
+
+    Second, you can call `dataframe_indices_satisfying` on a DataFrame `df` and
+    a any Python function `P` to be used as a predicate on rows.  `P` will be
+    called once for each row, with the row passed as a pandas Series.  Note that
+    the row&#39;s `.name` property is its corresponding index entry, in case your
+    predicate `P` wishes to use that information.  The result of the function
+    will be a pandas Index containing only the indices for which `P` returns
+    True.  The same calling synonyms as above apply in this case as well.
+
+    See also `dataframe_rows_satisfying()`.
+    &#34;&#34;&#34;
+    if callable( test ):
+        test = pd.Series( test( row ) for _,row in self.iterrows() )
+    return self.index[test]</code></pre>
+</details>
+</dd>
 <dt id="clear_data.dataframe_extensions.dataframe_is_a_function"><code class="name flex">
 <span>def <span class="ident">dataframe_is_a_function</span></span>(<span>self, input, output)</span>
 </code></dt>
@@ -228,10 +322,9 @@ Or you can pass the columns
 themselves, or any other series of the same length.
 Or you can pass the
 DataFrame's index, which will be converted to a Series for you.</p>
-<pre><code>This function is added to the &lt;code&gt;DataFrame&lt;/code&gt; class, so you can call it as
-&lt;code&gt;df.is\_a\_function(input\_col,output\_col)&lt;/code&gt; or as
-</code></pre>
-<p><code>df.can_lookup(input_col,output_col)</code>.</p></div>
+<p>This function is added to the <code>DataFrame</code> class, so you can call it as
+<code>df.is_a_function(input_col,output_col)</code> or as
+<code>df.can_lookup(input_col,output_col)</code>.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -248,8 +341,8 @@ DataFrame's index, which will be converted to a Series for you.</p>
     themselves, or any other series of the same length.  Or you can pass the
     DataFrame&#39;s index, which will be converted to a Series for you.
 
-        This function is added to the `DataFrame` class, so you can call it as
-        `df.is_a_function(input_col,output_col)` or as
+    This function is added to the `DataFrame` class, so you can call it as
+    `df.is_a_function(input_col,output_col)` or as
     `df.can_lookup(input_col,output_col)`.
     &#34;&#34;&#34;
     # ensure input is a Series
@@ -271,8 +364,8 @@ DataFrame's index, which will be converted to a Series for you.</p>
 </code></dt>
 <dd>
 <div class="desc"><p>There are two ways to use this function.</p>
-<p>First, you can call <code><a title="clear_data.dataframe_extensions.dataframe_rows_satisfying" href="#clear_data.dataframe_extensions.dataframe_rows_satisfying">dataframe_rows_satisfying()</a>(df,S)</code> where <code>S</code> is a
-pandas Series of boolean values, and it will give the same result as
+<p>First, you can call <code><a title="clear_data.dataframe_extensions.dataframe_rows_satisfying" href="#clear_data.dataframe_extensions.dataframe_rows_satisfying">dataframe_rows_satisfying()</a></code> on a DataFrame <code>df</code> and a
+pandas Series <code>S</code> of boolean values, and it will give the same result as
 <code>df[S]</code> would.
 Obviously that notation is more concise, while this one is
 more explicit.</p>
@@ -280,8 +373,8 @@ more explicit.</p>
 call it as <code>df.rows_satisfying(S)</code> or any of the following synonyms:
 <code>df.rows_where(S)</code>, <code>df.rows_such_that(S)</code>, <code>df.rows_in_which(S)</code>,
 <code>df.select(S)</code>, <code>df.select_rows(S)</code>, or <code>df.subset(S)</code>.</p>
-<p>Second, you can call <code><a title="clear_data.dataframe_extensions.dataframe_rows_satisfying" href="#clear_data.dataframe_extensions.dataframe_rows_satisfying">dataframe_rows_satisfying()</a>(df,P)</code> where <code>P</code> is any
-Python function to be used as a predicate on rows.
+<p>Second, you can call <code><a title="clear_data.dataframe_extensions.dataframe_rows_satisfying" href="#clear_data.dataframe_extensions.dataframe_rows_satisfying">dataframe_rows_satisfying()</a></code> on a DataFrame <code>df</code> and any
+Python function <code>P</code> to be used as a predicate on rows.
 <code>P</code> will be called
 once for each row, with the row passed as a pandas Series.
 The result of
@@ -296,7 +389,8 @@ This function, by default, creates a
 copy, because this is often perfectly acceptable, given that most use
 cases do not involve big data.
 You can pass the optional keyword
-argument <code>efficient=True</code> to get a slice instead of a copy.</p></div>
+argument <code>efficient=True</code> to get a slice instead of a copy.</p>
+<p>See also <code><a title="clear_data.dataframe_extensions.dataframe_indices_satisfying" href="#clear_data.dataframe_extensions.dataframe_indices_satisfying">dataframe_indices_satisfying()</a></code>.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -305,8 +399,8 @@ argument <code>efficient=True</code> to get a slice instead of a copy.</p></div>
     &#34;&#34;&#34;
     There are two ways to use this function.
     
-    First, you can call `dataframe_rows_satisfying(df,S)` where `S` is a
-    pandas Series of boolean values, and it will give the same result as
+    First, you can call `dataframe_rows_satisfying` on a DataFrame `df` and a
+    pandas Series `S` of boolean values, and it will give the same result as
     `df[S]` would.  Obviously that notation is more concise, while this one is
     more explicit.
     
@@ -315,8 +409,8 @@ argument <code>efficient=True</code> to get a slice instead of a copy.</p></div>
     `df.rows_where(S)`, `df.rows_such_that(S)`, `df.rows_in_which(S)`,
     `df.select(S)`, `df.select_rows(S)`, or `df.subset(S)`.
 
-    Second, you can call `dataframe_rows_satisfying(df,P)` where `P` is any
-    Python function to be used as a predicate on rows.  `P` will be called
+    Second, you can call `dataframe_rows_satisfying` on a DataFrame `df` and any
+    Python function `P` to be used as a predicate on rows.  `P` will be called
     once for each row, with the row passed as a pandas Series.  The result of
     the function will be another DataFrame containing only the rows for which
     `P` returns True.  The same calling synonyms as above apply in this case
@@ -328,6 +422,8 @@ argument <code>efficient=True</code> to get a slice instead of a copy.</p></div>
     copy, because this is often perfectly acceptable, given that most use
     cases do not involve big data.  You can pass the optional keyword
     argument `efficient=True` to get a slice instead of a copy.
+
+    See also `dataframe_indices_satisfying()`.
     &#34;&#34;&#34;
     if callable( test ):
         test = pd.Series( test( row ) for _,row in self.iterrows() )
@@ -350,12 +446,11 @@ Or you can pass the columns
 themselves, or any other series of the same length.
 Or you can pass the
 DataFrame's index, which will be converted to a Series for you.</p>
-<pre><code>This function is added to the &lt;code&gt;DataFrame&lt;/code&gt; class, so you can call it as
-&lt;code&gt;df.to\_dictionary(input\_col,output\_col)&lt;/code&gt;,
-&lt;code&gt;df.get\_dictionary(input\_col,output\_col)&lt;/code&gt;,
-&lt;code&gt;df.to\_dict(input\_col,output\_col)&lt;/code&gt;, or
-&lt;code&gt;df.get\_dict(input\_col,output\_col)&lt;/code&gt;.
-</code></pre></div>
+<p>This function is added to the <code>DataFrame</code> class, so you can call it as
+<code>df.to_dictionary(input_col,output_col)</code>,
+<code>df.get_dictionary(input_col,output_col)</code>,
+<code>df.to_dict(input_col,output_col)</code>, or
+<code>df.get_dict(input_col,output_col)</code>.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -373,11 +468,11 @@ DataFrame's index, which will be converted to a Series for you.</p>
     themselves, or any other series of the same length.  Or you can pass the
     DataFrame&#39;s index, which will be converted to a Series for you.
 
-        This function is added to the `DataFrame` class, so you can call it as
-        `df.to_dictionary(input_col,output_col)`,
-        `df.get_dictionary(input_col,output_col)`,
-        `df.to_dict(input_col,output_col)`, or
-        `df.get_dict(input_col,output_col)`.
+    This function is added to the `DataFrame` class, so you can call it as
+    `df.to_dictionary(input_col,output_col)`,
+    `df.get_dictionary(input_col,output_col)`,
+    `df.to_dict(input_col,output_col)`, or
+    `df.get_dict(input_col,output_col)`.
     &#34;&#34;&#34;
     # ensure input is a Series
     if type( input ) is str:
@@ -408,10 +503,9 @@ Or you can pass the columns
 themselves, or any other series of the same length.
 Or you can pass the
 DataFrame's index, which will be converted to a Series for you.</p>
-<pre><code>This function is added to the &lt;code&gt;DataFrame&lt;/code&gt; class, so you can call it as
-&lt;code&gt;df.to\_function(input\_col,output\_col)&lt;/code&gt; or
-</code></pre>
-<p><code>df.get_function(input_col,output_col)</code>.</p></div>
+<p>This function is added to the <code>DataFrame</code> class, so you can call it as
+<code>df.to_function(input_col,output_col)</code> or
+<code>df.get_function(input_col,output_col)</code>.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -429,8 +523,8 @@ DataFrame's index, which will be converted to a Series for you.</p>
     themselves, or any other series of the same length.  Or you can pass the
     DataFrame&#39;s index, which will be converted to a Series for you.
 
-        This function is added to the `DataFrame` class, so you can call it as
-        `df.to_function(input_col,output_col)` or
+    This function is added to the `DataFrame` class, so you can call it as
+    `df.to_function(input_col,output_col)` or
     `df.get_function(input_col,output_col)`.
     &#34;&#34;&#34;
     # ensure input is a Series
@@ -464,9 +558,8 @@ given by the columns provided.</p>
 <code>R = dataframe_to_relation(df,"A","B")</code>, then we would have
 <code>R(1,4) == True</code> but <code>R(1,2) == False</code>, becauase <code>R</code> represents the
 collection of tuples (1,4), (2,5), and (3,6).</p>
-<pre><code>This function is added to the &lt;code&gt;DataFrame&lt;/code&gt; class, so you can call it using
-</code></pre>
-<p>any of the following means: <code>my_df.to_relation(columns&hellip;)</code>,
+<p>This function is added to the <code>DataFrame</code> class, so you can call it using
+any of the following means: <code>my_df.to_relation(columns&hellip;)</code>,
 <code>my_df.to_predicate(columns&hellip;)</code> <code>my_df.get_relation(columns&hellip;)</code>, and
 <code>my_df.get_predicate(columns&hellip;)</code>.</p>
 <p>If you call this function on a DataFrame but do not specify the column
@@ -490,7 +583,7 @@ names, it assumes that all columns in the DataFrame should be used.</p></div>
     `R(1,4) == True` but `R(1,2) == False`, becauase `R` represents the
     collection of tuples (1,4), (2,5), and (3,6).
 
-        This function is added to the `DataFrame` class, so you can call it using
+    This function is added to the `DataFrame` class, so you can call it using
     any of the following means: `my_df.to_relation(columns...)`,
     `my_df.to_predicate(columns...)` `my_df.get_relation(columns...)`, and
     `my_df.get_predicate(columns...)`.
@@ -522,6 +615,7 @@ names, it assumes that all columns in the DataFrame should be used.</p></div>
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
+<li><code><a title="clear_data.dataframe_extensions.dataframe_indices_satisfying" href="#clear_data.dataframe_extensions.dataframe_indices_satisfying">dataframe_indices_satisfying</a></code></li>
 <li><code><a title="clear_data.dataframe_extensions.dataframe_is_a_function" href="#clear_data.dataframe_extensions.dataframe_is_a_function">dataframe_is_a_function</a></code></li>
 <li><code><a title="clear_data.dataframe_extensions.dataframe_rows_satisfying" href="#clear_data.dataframe_extensions.dataframe_rows_satisfying">dataframe_rows_satisfying</a></code></li>
 <li><code><a title="clear_data.dataframe_extensions.dataframe_to_dictionary" href="#clear_data.dataframe_extensions.dataframe_to_dictionary">dataframe_to_dictionary</a></code></li>
