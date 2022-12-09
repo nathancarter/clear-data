@@ -164,6 +164,8 @@ def dataframe_rows_satisfying ( self, test, efficient=False ):
     copy, because this is often perfectly acceptable, given that most use
     cases do not involve big data.  You can pass the optional keyword
     argument `efficient=True` to get a slice instead of a copy.
+
+    See also `dataframe_indices_satisfying()`.
     """
     if callable( test ):
         test = pd.Series( test( row ) for _,row in self.iterrows() )
@@ -177,3 +179,36 @@ pd.DataFrame.rows_where = dataframe_rows_satisfying
 pd.DataFrame.select_rows = dataframe_rows_satisfying
 pd.DataFrame.rows_select = dataframe_rows_satisfying
 pd.DataFrame.rows_subset = dataframe_rows_satisfying
+
+def dataframe_indices_satisfying ( self, test, efficient=False ):
+    """
+    There are two ways to use this function.
+    
+    First, you can call `dataframe_indices_satisfying` on a DataFrame `df` and a
+    Series `S` of boolean values, and it will give the same result as
+    `df.index[S]` would.  Obviously that notation is more concise, while this
+    one is more explicit.
+    
+    Because this function will be installed in the DataFrame class, you can
+    call it as `df.indices_satisfying(S)` or any of the following synonyms:
+    `df.indices_where(S)`, `df.indices_such_that(S)`, or
+    `df.indices_in_which(S)`.
+
+    Second, you can call `dataframe_indices_satisfying` on a DataFrame `df` and
+    a any Python function `P` to be used as a predicate on rows.  `P` will be
+    called once for each row, with the row passed as a pandas Series.  Note that
+    the row's `.name` property is its corresponding index entry, in case your
+    predicate `P` wishes to use that information.  The result of the function
+    will be a pandas Index containing only the indices for which `P` returns
+    True.  The same calling synonyms as above apply in this case as well.
+
+    See also `dataframe_rows_satisfying()`.
+    """
+    if callable( test ):
+        test = pd.Series( test( row ) for _,row in self.iterrows() )
+    return self.index[test]
+
+pd.DataFrame.indices_satisfying = dataframe_indices_satisfying
+pd.DataFrame.indices_such_that = dataframe_indices_satisfying
+pd.DataFrame.indices_in_which = dataframe_indices_satisfying
+pd.DataFrame.indices_where = dataframe_indices_satisfying

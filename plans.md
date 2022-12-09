@@ -1,9 +1,4 @@
 
-# Subsetting
-
-Similar to `df.rows_satisfying(pred)` have `df.index_satisfying(pred)`,
-and all the related synonyms.
-
 # Visualization
 
  * `Series.plot_distribution()` will make an intelligent guess about the

@@ -81,5 +81,30 @@ class TestSubsetting( unittest.TestCase ):
             self.assertEqual( len( ws ), 1 )
             self.assertTrue( 'slice' in str( ws[-1].message ) )
 	
+    def test_subset_of_index_using_bool_series ( self ):
+        # Same as first test, but now on just indices
+        df = pd.DataFrame( {
+            'divisor'  : [ 1, 1, 2, 1, 3, 1, 2, 4, 1, 5 ],
+            'dividend' : [ 1, 2, 2, 3, 3, 4, 4, 4, 5, 5 ]
+        } )
+        # select just the even dividends
+        indices = df.indices_satisfying( df.dividend % 2 == 0 )
+        self.assertTrue( indices.to_list() == [ 1, 2, 5, 6, 7 ] )
+        # rather than test each synonym, let's just ensure they're all the
+        # same function!
+        self.assertEqual( df.indices_satisfying, df.indices_such_that )
+        self.assertEqual( df.indices_satisfying, df.indices_in_which )
+        self.assertEqual( df.indices_satisfying, df.indices_where )
+    
+    def test_subset_of_index_using_predicate ( self ):
+        # Same as second test, but now on just indices
+        df = pd.DataFrame( {
+            'divisor'  : [ 1, 1, 2, 1, 3, 1, 2, 4, 1, 5 ],
+            'dividend' : [ 1, 2, 2, 3, 3, 4, 4, 4, 5, 5 ]
+        } )
+        # select just the even dividends
+        indices = df.indices_satisfying( lambda row: row.dividend % 2 == 0 )
+        self.assertTrue( indices.to_list() == [ 1, 2, 5, 6, 7 ] )
+	
 if __name__ == '__main__':
     unittest.main()
