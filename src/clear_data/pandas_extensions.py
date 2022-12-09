@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 
 # Top 50 last names from 2010 US Census data:
-def random_last_name ():
+def _random_last_name ():
     return np.random.choice( [ 'Smith', 'Johnson', 'Williams', 'Brown',
         'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez',
         'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson', 'Thomas',
@@ -13,7 +13,7 @@ def random_last_name ():
         'Nguyen', 'Hill', 'Flores', 'Green', 'Adams', 'Nelson', 'Baker',
         'Hall', 'Rivera', 'Campbell', 'Mitchell', 'Carter', 'Roberts' ] )
 # Top 50 first names from 2021 US Social Security data, 25 male, 25 female:
-def random_first_name ():
+def _random_first_name ():
     return np.random.choice( [ 'Liam', 'Olivia', 'Noah', 'Emma', 'Oliver',
         'Charlotte', 'Elijah', 'Amelia', 'James', 'Ava', 'William', 'Sophia',
         'Benjamin', 'Isabella', 'Lucas', 'Mia', 'Henry', 'Evelyn', 'Theodore',
@@ -23,7 +23,7 @@ def random_first_name ():
         'Logan', 'Emily', 'Owen', 'Aria', 'Samuel', 'Penelope', 'Jacob',
         'Chloe', 'Asher', 'Layla' ] )
 # Made up list of departments
-def random_department ():
+def _random_department ():
     return np.random.choice( [ 'Sales', 'Service', 'Management',
         'Administration', 'Finance', 'Accounting', 'Analytics', 'Research',
         'Human Resources', 'Facilities', 'Information Technology' ] )
@@ -48,8 +48,8 @@ def random_dataframe ( num_rows = 20, num_cols = 5, type = 'Employee' ):
     The default, produced by `pd.example()`, uses 20 rows, 6 columns, and
     Employee records.
 
-	This function is added to the `pandas` module, so you can call it as
-	`pd.example(args).
+    This function is added to the `pandas` module, so you can call it as
+    `pd.example(args).
     '''
     if type == int:
         return pd.DataFrame(
@@ -62,12 +62,12 @@ def random_dataframe ( num_rows = 20, num_cols = 5, type = 'Employee' ):
     if type == 'Employee':
         num_cols = max( num_cols, 6 )
         result = pd.DataFrame( {
-            'LastName' : [ random_last_name() for _ in range( num_rows ) ],
-            'FirstName' : [ random_first_name() for _ in range( num_rows ) ],
+            'LastName' : [ _random_last_name() for _ in range( num_rows ) ],
+            'FirstName' : [ _random_first_name() for _ in range( num_rows ) ],
             'ID' : [
                 str(id) for id in np.random.randint( 100000, 999999, num_rows )
             ],
-            'Department' : [ random_department() for _ in range( num_rows ) ],
+            'Department' : [ _random_department() for _ in range( num_rows ) ],
             'Salary' : np.random.uniform( 50000, 150000, num_rows ).round( 2 ),
             'YearsAtCompany' : np.random.randint( 1, 20, num_rows )
         } )

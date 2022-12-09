@@ -46,8 +46,8 @@ def load_any_file ( filename, *args, **kwargs ):
          you receive exactly one DataFrame, as with all other `pd.read_*()`
          routines.  You decide which one with the "index" argument.
 
-	This function is added to the `pandas` module, so you can call it as
-	`pd.load(filename)`.
+    This function is added to the `pandas` module, so you can call it as
+    `pd.load(filename)`.
     '''
     extension = filename.split( '.' )[-1].lower()
     # Throw an error if they are trying to read the old XLS format without the
@@ -195,8 +195,8 @@ def save_any_dataframe ( self, filename, *args, **kwargs ):
          set to "split" (instead of the default "columns") because this helps
          ensure accuracy when reloading.
 
-	This function is added to the `DataFrame` class, so you can call it as
-	`df.save(filename)`.
+    This function is added to the `DataFrame` class, so you can call it as
+    `df.save(filename)`.
     '''
     extension = filename.split( '.' )[-1].lower()
     # Throw an error if they are trying to write in the old XLS format without

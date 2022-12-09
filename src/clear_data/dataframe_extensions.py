@@ -15,8 +15,8 @@ def dataframe_is_a_function ( self, input, output ):
     themselves, or any other series of the same length.  Or you can pass the
     DataFrame's index, which will be converted to a Series for you.
 
-	This function is added to the `DataFrame` class, so you can call it as
-	`df.is_a_function(input_col,output_col)` or as
+    This function is added to the `DataFrame` class, so you can call it as
+    `df.is_a_function(input_col,output_col)` or as
     `df.can_lookup(input_col,output_col)`.
     """
     # ensure input is a Series
@@ -48,8 +48,8 @@ def dataframe_to_function ( self, input, output ):
     themselves, or any other series of the same length.  Or you can pass the
     DataFrame's index, which will be converted to a Series for you.
 
-	This function is added to the `DataFrame` class, so you can call it as
-	`df.to_function(input_col,output_col)` or
+    This function is added to the `DataFrame` class, so you can call it as
+    `df.to_function(input_col,output_col)` or
     `df.get_function(input_col,output_col)`.
     """
     # ensure input is a Series
@@ -80,11 +80,11 @@ def dataframe_to_dictionary ( self, input, output ):
     themselves, or any other series of the same length.  Or you can pass the
     DataFrame's index, which will be converted to a Series for you.
 
-	This function is added to the `DataFrame` class, so you can call it as
-	`df.to_dictionary(input_col,output_col)`,
-	`df.get_dictionary(input_col,output_col)`,
-	`df.to_dict(input_col,output_col)`, or
-	`df.get_dict(input_col,output_col)`.
+    This function is added to the `DataFrame` class, so you can call it as
+    `df.to_dictionary(input_col,output_col)`,
+    `df.get_dictionary(input_col,output_col)`,
+    `df.to_dict(input_col,output_col)`, or
+    `df.get_dict(input_col,output_col)`.
     """
     # ensure input is a Series
     if type( input ) is str:
@@ -119,7 +119,7 @@ def dataframe_to_relation ( self, *column_names ):
     `R(1,4) == True` but `R(1,2) == False`, becauase `R` represents the
     collection of tuples (1,4), (2,5), and (3,6).
 
-	This function is added to the `DataFrame` class, so you can call it using
+    This function is added to the `DataFrame` class, so you can call it using
     any of the following means: `my_df.to_relation(columns...)`,
     `my_df.to_predicate(columns...)` `my_df.get_relation(columns...)`, and
     `my_df.get_predicate(columns...)`.
@@ -141,8 +141,8 @@ def dataframe_rows_satisfying ( self, test, efficient=False ):
     """
     There are two ways to use this function.
     
-    First, you can call `dataframe_rows_satisfying(df,S)` where `S` is a
-    pandas Series of boolean values, and it will give the same result as
+    First, you can call `dataframe_rows_satisfying` on a DataFrame `df` and a
+    pandas Series `S` of boolean values, and it will give the same result as
     `df[S]` would.  Obviously that notation is more concise, while this one is
     more explicit.
     
@@ -151,8 +151,8 @@ def dataframe_rows_satisfying ( self, test, efficient=False ):
     `df.rows_where(S)`, `df.rows_such_that(S)`, `df.rows_in_which(S)`,
     `df.select(S)`, `df.select_rows(S)`, or `df.subset(S)`.
 
-    Second, you can call `dataframe_rows_satisfying(df,P)` where `P` is any
-    Python function to be used as a predicate on rows.  `P` will be called
+    Second, you can call `dataframe_rows_satisfying` on a DataFrame `df` and any
+    Python function `P` to be used as a predicate on rows.  `P` will be called
     once for each row, with the row passed as a pandas Series.  The result of
     the function will be another DataFrame containing only the rows for which
     `P` returns True.  The same calling synonyms as above apply in this case
