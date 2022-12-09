@@ -174,6 +174,6 @@ pd.DataFrame.rows_satisfying = dataframe_rows_satisfying
 pd.DataFrame.rows_such_that = dataframe_rows_satisfying
 pd.DataFrame.rows_in_which = dataframe_rows_satisfying
 pd.DataFrame.rows_where = dataframe_rows_satisfying
-pd.DataFrame.rows_select_rows = dataframe_rows_satisfying
+pd.DataFrame.select_rows = dataframe_rows_satisfying
 pd.DataFrame.rows_select = dataframe_rows_satisfying
 pd.DataFrame.rows_subset = dataframe_rows_satisfying

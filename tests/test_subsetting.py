@@ -29,7 +29,7 @@ class TestSubsetting( unittest.TestCase ):
         self.assertEqual( df.rows_satisfying, df.rows_such_that )
         self.assertEqual( df.rows_satisfying, df.rows_in_which )
         self.assertEqual( df.rows_satisfying, df.rows_where )
-        self.assertEqual( df.rows_satisfying, df.rows_select_rows )
+        self.assertEqual( df.rows_satisfying, df.select_rows )
         self.assertEqual( df.rows_satisfying, df.rows_select )
         self.assertEqual( df.rows_satisfying, df.rows_subset )
     
