@@ -4,17 +4,72 @@
  * `Series.plot_distribution()` will make an intelligent guess about the
    type of plot based on the series's size and content, but you can
    override with `using="hist"` or box, swarm, strip, violin, ECDF, etc.
+    * If the data type is integer:
+       * Let's say the max number of bars that look good in a bar plot is $n$
+         (though this should be an optional parameter).
+       * If the range is $\leq n$, just do a bar plot, one bar per integer.
+       * If the range is $>n$, group `ceiling(m/n)` integers per bin.
+    * If the data type is float or timedelta64 or datetime64:
+       * Maybe just do ordinary `plt.hist()` for this, and add the KDE if the
+         number of points is above a certain threshold?
+    * If the data type is bool, treat it as categorical with 2 categories.
+    * If the data type is categorical, treat it as integers, one per category,
+      no gaps between them, so the range is the same size as the number of
+      categories.
+    * If the user commands any of the other types (except ECDF) just call the
+      existing matplotlib function for it.
+    * If the user commands ECDF, graph it with the default of showing the normal
+      curve on top, but make that a parameter the user can replace with whatever
+      NumPy random variable they like.  See code
+      [here](https://nathancarter.github.io/MA346-course-notes/_build/html/chapter-10-visualization.html#can-t-i-test-a-single-column-for-normality)
+      for how to create such a plot.
+    * If the user commands QQ plot, graph it with the default of showing the
+      $y=x$ line on top, but make that a parameter the user can replace with
+      whatever NumPy random variable they like.  Recall that a QQ plot contains
+      points $(x_i,y_i)$ for $i$ in `range(101)` and $x_i$ the $i$th percentile
+      for the chosen theoretical distribution and $y_i$ the $i$th percentile in
+      the actual data.
  * `DataFrame.plot_function(x[,y,z])`
+    * By default, do not first verify that the thing actually is a function;
+      just believe the user.  But make this a parameter they can change.
+    * If any one column is categorical with a small enough number of categories,
+      just sort the categories, use them as the axis labels, and convert the
+      data to numbers that line up correctly.  If the data is strings, just
+      treat them as categories in this sense.  Same for bool.  If the data is
+      any other non-numeric thing, raise an exception.
+    * For $(x,y)$ pairs (no $z$ yet):
+       * If the $x$ data type is integer or dates or has been converted to such
+         from categorical, use dots as the marker, but the user can override
+         this with an optional parameter if they choose.
+       * If the $x$ data type is float or timedelta64, use lines as the marker,
+         also overridable.
+    * For $(x,y,z)$ triples:
+       * If $x$ and $y$ both discrete, use dots as the marker (overridable).
+       * If $x$ and $y$ both continuous, plot a surface.
+       * If $x$ discrete and $y$ continuous, plot separate lines parallel to the
+         $yz$ plane.
+       * If $x$ continuous and $y$ discrete, plot separate lines parallel to the
+         $xz$ plane.
  * `DataFrame.plot_relation(x[,y])` (or `plot_binary_relation`)
- * `DataFrame.plot_relations(x[,y])` (or `plot_binary_relations`) does a
+    * Always does a scatterplot.
+    * If the number of points is above a certain threshold, defaults to using an
+      alpha value to make the cloud more informative.
+    * Adds the KDE plot for an axis by default if the count of unique values for
+      that axis is above a certain threshold, but this can be overridden.
+    * If no $y$ is specified, multiple relations are shown on the same graph,
+      with different colors and a legend, but the same $x$ variable for each.
+ * `DataFrame.plot_relations()` (or `plot_binary_relations`) does a
    pair plot
- * `DataFrame.plot_distribution(x[,y])` can accept `using="..."` as above
+ * `DataFrame.plot_distribution(x,*args,**kwargs)` functions just like
+   `df[x].plot_distribution(*args,**kwargs)`.
  * `DataFrame.plot_distributions(cols...)` can also accept `using="..."`,
    and will be smart about multiple columns, e.g., side-by-side bars in a
-   histogram
- * `DataFrame.plot_linear_model(x[,y,z])`
- * `DataFrame.plot_correlations([colnames...])` does a heat map
- * `DataFrame.plot_on_map(lat,lng[,labels])` does a geographic plot
+   histogram.  I haven't yet written out all the plans for this one.
+ * `DataFrame.plot_linear_model(x[,y,z])` - not yet planned in detail.
+ * `DataFrame.plot_correlations([colnames...])` does a heat map not yet planned
+   in detail.
+ * `DataFrame.plot_on_map(lat,lng[,labels])` does a geographic plot, not yet
+   planned in detail.
 
 # Statistics
 
